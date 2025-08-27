@@ -1,6 +1,7 @@
 // Map of codes → file URLs
 const codes = {
-  "nickisthebest": "files/file.3mf"
+  "nickisthebest": "files/file.3mf",
+  "nickisthegoat": "files/file1.html"
 };
 
 document.getElementById("submitBtn").addEventListener("click", checkCode);
