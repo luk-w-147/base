@@ -1,8 +1,6 @@
 // Map of codes → file URLs
 const codes = {
-  "ABC123": "files/file1.pdf",
-  "XYZ789": "files/file2.zip",
-  "HELLO42": "files/file3.mp3"
+  "nickisthebest": "files/file.3mf"
 };
 
 document.getElementById("submitBtn").addEventListener("click", checkCode);
