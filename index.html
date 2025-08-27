@@ -2,17 +2,306 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Code Unlock Download</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      width: 100%;
+      max-width: 400px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .icon {
+      font-size: 48px;
+      margin-bottom: 20px;
+      opacity: 0.8;
+    }
+
+    h2 {
+      color: #333;
+      margin-bottom: 30px;
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 25px;
+    }
+
+    #codeInput {
+      width: 100%;
+      padding: 15px 20px;
+      border: 2px solid #e1e8ed;
+      border-radius: 12px;
+      font-size: 16px;
+      background: rgba(255, 255, 255, 0.9);
+      transition: all 0.3s ease;
+      outline: none;
+    }
+
+    #codeInput:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      transform: translateY(-1px);
+    }
+
+    #codeInput::placeholder {
+      color: #a0a0a0;
+    }
+
+    #submitBtn {
+      width: 100%;
+      padding: 15px 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #submitBtn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    }
+
+    #submitBtn:active {
+      transform: translateY(0);
+    }
+
+    #submitBtn.loading {
+      pointer-events: none;
+      opacity: 0.8;
+    }
+
+    .spinner {
+      display: none;
+      width: 20px;
+      height: 20px;
+      border: 2px solid transparent;
+      border-top: 2px solid white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    #message {
+      margin-top: 20px;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: 500;
+      min-height: 20px;
+      transition: all 0.3s ease;
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    #message.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    #message.success {
+      background: rgba(46, 204, 113, 0.1);
+      color: #27ae60;
+      border: 1px solid rgba(46, 204, 113, 0.3);
+    }
+
+    #message.error {
+      background: rgba(231, 76, 60, 0.1);
+      color: #e74c3c;
+      border: 1px solid rgba(231, 76, 60, 0.3);
+    }
+
+    #message.info {
+      background: rgba(52, 152, 219, 0.1);
+      color: #3498db;
+      border: 1px solid rgba(52, 152, 219, 0.3);
+    }
+
+    .hint {
+      margin-top: 20px;
+      color: #666;
+      font-size: 14px;
+      opacity: 0.8;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 30px 20px;
+        margin: 10px;
+      }
+      
+      h2 {
+        font-size: 20px;
+      }
+    }
+
+    /* Subtle pulse animation for the container */
+    @keyframes pulse {
+      0% { box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2); }
+      50% { box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25); }
+      100% { box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2); }
+    }
+
+    .container {
+      animation: pulse 4s ease-in-out infinite;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
-    <h2>Enter your code</h2>
-    <input type="text" id="codeInput" placeholder="Enter code here">
-    <button id="submitBtn">Submit</button>
-    <p id="message"></p>
+    <div class="icon">🔐</div>
+    <h2>Enter Your Access Code</h2>
+    <div class="input-group">
+      <input type="text" id="codeInput" placeholder="Enter your code here" autocomplete="off">
+    </div>
+    <button id="submitBtn">
+      <span id="btnText">Unlock Download</span>
+      <div class="spinner" id="spinner"></div>
+    </button>
+    <div id="message"></div>
+    <div class="hint">Press Enter or click the button to submit</div>
   </div>
   
-  <script src="script.js"></script>
+  <script>
+    // Enhanced code with better UX and case-insensitive support
+    class CodeUnlocker {
+      constructor() {
+        this.codes = {
+          "nickisthegoat": "files/file1.html"
+        };
+        this.init();
+      }
+
+      init() {
+        const submitBtn = document.getElementById("submitBtn");
+        const codeInput = document.getElementById("codeInput");
+        
+        submitBtn.addEventListener("click", () => this.checkCode());
+        
+        // Add Enter key support
+        codeInput.addEventListener("keypress", (e) => {
+          if (e.key === "Enter") {
+            this.checkCode();
+          }
+        });
+        
+        // Focus input on page load
+        codeInput.focus();
+      }
+
+      async checkCode() {
+        const input = document.getElementById("codeInput").value.trim().toLowerCase(); // Case insensitive
+        const submitBtn = document.getElementById("submitBtn");
+        const btnText = document.getElementById("btnText");
+        const spinner = document.getElementById("spinner");
+        
+        if (!input) {
+          this.showMessage("Please enter a code", "error");
+          return;
+        }
+
+        // Show loading state
+        submitBtn.classList.add("loading");
+        btnText.style.display = "none";
+        spinner.style.display = "block";
+
+        // Simulate processing time for better UX
+        setTimeout(() => {
+          const fileUrl = this.codes[input];
+          
+          if (fileUrl) {
+            this.downloadFile(fileUrl);
+            document.getElementById("codeInput").value = ""; // Clear input
+          } else {
+            this.showMessage("Invalid code. Please try again!", "error");
+          }
+          
+          // Reset button state
+          submitBtn.classList.remove("loading");
+          btnText.style.display = "inline";
+          spinner.style.display = "none";
+        }, 800);
+      }
+
+      downloadFile(url) {
+        try {
+          this.showMessage("Download starting...", "success");
+          
+          // Create and trigger download
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = "";
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          
+          setTimeout(() => {
+            this.showMessage("File download initiated successfully! ✨", "success");
+          }, 1000);
+          
+        } catch (error) {
+          this.showMessage("Download failed. Please try again.", "error");
+          console.error("Download error:", error);
+        }
+      }
+
+      showMessage(text, type) {
+        const msg = document.getElementById("message");
+        msg.textContent = text;
+        msg.className = `${type} show`;
+        
+        // Clear previous timeout
+        if (this.messageTimeout) {
+          clearTimeout(this.messageTimeout);
+        }
+        
+        // Auto-hide success messages after 5 seconds
+        if (type === "success") {
+          this.messageTimeout = setTimeout(() => {
+            msg.classList.remove("show");
+          }, 5000);
+        }
+      }
+    }
+
+    // Initialize when DOM is loaded
+    document.addEventListener("DOMContentLoaded", () => {
+      new CodeUnlocker();
+    });
+  </script>
 </body>
 </html>
