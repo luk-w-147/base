@@ -338,7 +338,7 @@
 		  "idon'tknow": "files/science_t3_ct.docx",
 		  "carrotr1": "files/granola_recipe_card.xlsx",
 		  "idoknow": "files/ancient_egypt_slides.pptx",
-		  "cool": "files/nothing.jpg"
+		  "bombaclat": "files/out.zip"
 		}
         this.init();
       }
@@ -437,7 +437,7 @@
 
     // Initialize when DOM is loaded
     document.addEventListener("DOMContentLoaded", () => {
-      new CodeUnlocker();
+      window.codeUnlockerInstance = new CodeUnlocker();
     });
 
     // Admin panel functionality
@@ -469,12 +469,8 @@
 
     function displayAllCodes() {
       const codesList = document.getElementById("codesList");
-      const codes = {
-        "idon'tknow": "files/science_t3_ct.docx",
-        "carrotr1": "files/granola_recipe_card.xlsx",
-        "idoknow": "files/ancient_egypt_slides.pptx",
-        "cool": "files/nothing.jpg"
-      };
+      // Get the codes from the actual CodeUnlocker instance
+      const codes = window.codeUnlockerInstance.codes;
 
       codesList.innerHTML = "";
       Object.entries(codes).forEach(([code, file]) => {
