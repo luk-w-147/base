@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Code Unlock Download</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Admin icon in corner -->
+  <div class="admin-icon" id="adminIcon" title="Admin">⚙️</div>
+  
+  <!-- Admin modal -->
+  <div class="admin-modal" id="adminModal">
+    <div class="admin-panel">
+      <h3>Admin Panel</h3>
+      <div id="adminLogin">
+        <input type="password" class="admin-input" id="adminPassword" placeholder="Enter admin password">
+        <button class="admin-btn" onclick="checkAdminPassword()">Login</button>
+        <button class="admin-btn cancel" onclick="closeAdminModal()">Cancel</button>
+      </div>
+      <div id="adminContent" style="display: none;">
+        <h4>All Access Codes:</h4>
+        <div class="codes-list" id="codesList"></div>
+        <button class="admin-btn cancel" onclick="closeAdminModal()" style="margin-top: 20px;">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="icon">🔓</div>
+    <h2>Enter Your Access Code</h2>
+    <div class="input-group">
+      <input type="text" id="codeInput" placeholder="Enter your code here" autocomplete="off">
+    </div>
+    <button id="submitBtn">
+      <span id="btnText">Unlock Download</span>
+      <div class="spinner" id="spinner"></div>
+    </button>
+    <div id="message"></div>
+    <div class="hint">Press Enter or click the button to submit</div>
+  </div>
+  
+  <script src="script.js"></script>
+</body>
+</html>
