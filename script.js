@@ -1,14 +1,10 @@
-// Enhanced code with better UX and case-insensitive support
+// Enhanced code with API integration
 class CodeUnlocker {
   constructor() {
-    this.codes = {
-	  "idon'tknow": "files/science_t3_ct.docx",
-	  "carrotr1": "files/granola_recipe_card.xlsx",
-	  "idoknow": "files/ancient_egypt_slides.pptx",
-	  "cool": "files/nothing.jpg",
-	  "bombaclat": "files/out.zip",
-	  "69lorakeet": "files/Augie.HEIC"
-	}
+    // Use your live API URL - change this to your actual worker URL
+    this.API_BASE = 'https://code-unlock-api.thanos.workers.dev';
+    
+    // Remove the local codes object since we'll get them from the API
     this.init();
   }
 
@@ -30,7 +26,7 @@ class CodeUnlocker {
   }
 
   async checkCode() {
-    const input = document.getElementById("codeInput").value.trim().toLowerCase(); // Case insensitive
+    const input = document.getElementById("codeInput").value.trim();
     const submitBtn = document.getElementById("submitBtn");
     const btnText = document.getElementById("btnText");
     const spinner = document.getElementById("spinner");
@@ -45,38 +41,65 @@ class CodeUnlocker {
     btnText.style.display = "none";
     spinner.style.display = "block";
 
-    // Simulate processing time for better UX
-    setTimeout(() => {
-      const fileUrl = this.codes[input];
-      
-      if (fileUrl) {
-        this.downloadFile(fileUrl);
+    try {
+      // Call the unlock API
+      const response = await fetch(`${this.API_BASE}/api/unlock`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ code: input })
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        // API returned success with download URL
+        this.downloadFile(result.downloadUrl, result.fileName);
         document.getElementById("codeInput").value = ""; // Clear input
       } else {
-        this.showMessage("Invalid code. Please try again!", "error");
+        // API returned an error
+        this.showMessage(result.error || "Invalid code. Please try again!", "error");
       }
-      
-      // Reset button state
-      submitBtn.classList.remove("loading");
-      btnText.style.display = "inline";
-      spinner.style.display = "none";
-    }, 800);
+
+    } catch (error) {
+      console.error('API error:', error);
+      this.showMessage("Connection error. Please try again!", "error");
+    }
+
+    // Reset button state
+    submitBtn.classList.remove("loading");
+    btnText.style.display = "inline";
+    spinner.style.display = "none";
   }
 
-  downloadFile(url) {
+  async downloadFile(downloadUrl, fileName) {
     try {
       this.showMessage("Download starting...", "success");
       
+      // Fetch the file from the API
+      const response = await fetch(`${this.API_BASE}${downloadUrl}`);
+      
+      if (!response.ok) {
+        throw new Error('Download failed');
+      }
+
+      // Convert response to blob
+      const blob = await response.blob();
+      
       // Create and trigger download
       const link = document.createElement("a");
-      link.href = url;
-      link.download = "";
+      link.href = URL.createObjectURL(blob);
+      link.download = fileName;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
       
+      // Clean up the blob URL
+      URL.revokeObjectURL(link.href);
+      
       setTimeout(() => {
-        this.showMessage("File download initiated successfully! ✨", "success");
+        this.showMessage("File download completed successfully! ✨", "success");
       }, 1000);
       
     } catch (error) {
@@ -109,7 +132,7 @@ document.addEventListener("DOMContentLoaded", () => {
   window.codeUnlockerInstance = new CodeUnlocker();
 });
 
-// Admin panel functionality
+// Admin panel functionality - updated to use API
 document.getElementById("adminIcon").addEventListener("click", () => {
   document.getElementById("adminModal").classList.add("show");
   document.getElementById("adminPassword").focus();
@@ -122,26 +145,41 @@ document.getElementById("adminPassword").addEventListener("keypress", (e) => {
   }
 });
 
-function checkAdminPassword() {
+async function checkAdminPassword() {
   const password = document.getElementById("adminPassword").value;
-  if (password === "admin") {
-    document.getElementById("adminLogin").style.display = "none";
-    document.getElementById("adminContent").style.display = "block";
-    displayAllCodes();
-    document.getElementById("adminPassword").value = "";
-  } else {
-    alert("Incorrect password!");
-    document.getElementById("adminPassword").value = "";
-    document.getElementById("adminPassword").focus();
+  const API_BASE = 'https://code-unlock-api.thanos.workers.dev';
+  
+  try {
+    const response = await fetch(`${API_BASE}/api/admin/codes`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ password: password })
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      document.getElementById("adminLogin").style.display = "none";
+      document.getElementById("adminContent").style.display = "block";
+      displayAllCodes(result.codes);
+      document.getElementById("adminPassword").value = "";
+    } else {
+      alert("Incorrect password!");
+      document.getElementById("adminPassword").value = "";
+      document.getElementById("adminPassword").focus();
+    }
+  } catch (error) {
+    console.error('Admin API error:', error);
+    alert("Connection error. Please try again!");
   }
 }
 
-function displayAllCodes() {
+function displayAllCodes(codes) {
   const codesList = document.getElementById("codesList");
-  // Get the codes from the actual CodeUnlocker instance
-  const codes = window.codeUnlockerInstance.codes;
-
   codesList.innerHTML = "";
+  
   Object.entries(codes).forEach(([code, file]) => {
     const codeItem = document.createElement("div");
     codeItem.className = "code-item";
