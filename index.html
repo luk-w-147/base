@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Code Unlock Download</title>
   <style>
+    :root {
+      --wallpaper-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -14,11 +18,12 @@
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       min-height: 100vh;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: var(--wallpaper-bg);
       display: flex;
       justify-content: center;
       align-items: center;
       padding: 20px;
+      transition: background 0.5s ease;
     }
 
     .container {
@@ -240,6 +245,7 @@
       justify-content: center;
       margin-bottom: 25px;
       border-bottom: 2px solid #e1e8ed;
+      flex-wrap: wrap;
     }
 
     .admin-tab {
@@ -538,6 +544,239 @@
       opacity: 0.9;
     }
 
+    /* NEW: Wallpaper-specific styles */
+    .wallpaper-builder {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .wallpaper-tabs {
+      display: flex;
+      margin-bottom: 20px;
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      padding: 4px;
+      flex-wrap: wrap;
+    }
+
+    .wallpaper-tab {
+      flex: 1;
+      background: none;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.3s ease;
+      color: #666;
+      margin: 2px;
+      min-width: 80px;
+    }
+
+    .wallpaper-tab.active {
+      background: #667eea;
+      color: white;
+    }
+
+    .wallpaper-content {
+      display: none;
+    }
+
+    .wallpaper-content.active {
+      display: block;
+    }
+
+    .color-input-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .color-input-group input[type="color"] {
+      width: 50px;
+      height: 35px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .color-input-group input[type="text"] {
+      flex: 1;
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-family: monospace;
+      font-size: 12px;
+    }
+
+    .gradient-controls {
+      margin-bottom: 20px;
+    }
+
+    .gradient-direction {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+      align-items: center;
+    }
+
+    .gradient-direction select {
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      background: white;
+    }
+
+    .gradient-direction input[type="number"] {
+      width: 80px;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+    }
+
+    .color-stops {
+      margin-bottom: 15px;
+    }
+
+    .color-stop {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 8px;
+    }
+
+    .color-stop input[type="color"] {
+      width: 40px;
+      height: 30px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .color-stop input[type="text"] {
+      width: 100px;
+      padding: 6px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 11px;
+    }
+
+    .color-stop input[type="range"] {
+      flex: 1;
+    }
+
+    .color-stop .position-value {
+      width: 50px;
+      text-align: center;
+      font-size: 12px;
+      color: #666;
+    }
+
+    .remove-stop {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .add-stop {
+      background: #27ae60;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .wallpaper-preview {
+      width: 100%;
+      height: 100px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .wallpaper-preview::after {
+      content: 'Preview';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: rgba(255, 255, 255, 0.8);
+      font-weight: bold;
+      text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      font-size: 14px;
+    }
+
+    .presets-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .preset-item {
+      cursor: pointer;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: transform 0.3s ease;
+      border: 2px solid transparent;
+    }
+
+    .preset-item:hover {
+      transform: translateY(-2px);
+      border-color: #667eea;
+    }
+
+    .preset-item.selected {
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+    }
+
+    .preset-thumbnail {
+      width: 100%;
+      height: 60px;
+      border-radius: 6px 6px 0 0;
+    }
+
+    .preset-name {
+      padding: 8px;
+      background: rgba(255, 255, 255, 0.9);
+      text-align: center;
+      font-size: 11px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .custom-css-area {
+      margin-bottom: 20px;
+    }
+
+    .custom-css-area textarea {
+      width: 100%;
+      height: 80px;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 12px;
+      resize: vertical;
+    }
+
     @media (max-width: 768px) {
       .admin-panel {
         padding: 20px;
@@ -562,6 +801,19 @@
       .code-item .actions, .file-item .actions {
         width: 100%;
         justify-content: flex-start;
+      }
+
+      .wallpaper-tabs {
+        flex-direction: column;
+      }
+
+      .wallpaper-tab {
+        margin: 2px 0;
+      }
+
+      .presets-grid {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        gap: 10px;
       }
     }
   </style>
@@ -601,6 +853,7 @@
           <button class="admin-tab active" onclick="switchTab('codes')">Manage Codes</button>
           <button class="admin-tab" onclick="switchTab('files')">File Manager</button>
           <button class="admin-tab" onclick="switchTab('upload')">Upload Files</button>
+          <button class="admin-tab" onclick="switchTab('wallpaper')">Wallpaper</button>
         </div>
 
         <!-- Codes Tab -->
@@ -638,6 +891,105 @@
             <input type="file" id="fileInput" style="display: none;" multiple>
           </div>
           <div id="uploadProgress" style="margin-top: 20px;"></div>
+        </div>
+
+        <!-- NEW: Wallpaper Tab -->
+        <div id="wallpaperTab" class="admin-content">
+          <div class="wallpaper-builder">
+            <!-- Wallpaper Type Tabs -->
+            <div class="wallpaper-tabs">
+              <button class="wallpaper-tab active" onclick="switchWallpaperTab('solid')">Solid Color</button>
+              <button class="wallpaper-tab" onclick="switchWallpaperTab('linear')">Linear Gradient</button>
+              <button class="wallpaper-tab" onclick="switchWallpaperTab('radial')">Radial Gradient</button>
+              <button class="wallpaper-tab" onclick="switchWallpaperTab('presets')">Presets</button>
+              <button class="wallpaper-tab" onclick="switchWallpaperTab('custom')">Custom CSS</button>
+            </div>
+
+            <!-- Preview Area -->
+            <div class="wallpaper-preview" id="wallpaperPreview"></div>
+
+            <!-- Solid Color Content -->
+            <div id="solidContent" class="wallpaper-content active">
+              <div class="form-group">
+                <label>Choose Color:</label>
+                <div class="color-input-group">
+                  <input type="color" id="solidColor" value="#667eea">
+                  <input type="text" id="solidColorHex" value="#667eea" placeholder="#667eea">
+                </div>
+              </div>
+            </div>
+
+            <!-- Linear Gradient Content -->
+            <div id="linearContent" class="wallpaper-content">
+              <div class="gradient-controls">
+                <div class="form-group">
+                  <label>Direction:</label>
+                  <div class="gradient-direction">
+                    <select id="linearDirection">
+                      <option value="135deg">135° (Default)</option>
+                      <option value="0deg">0° (Right)</option>
+                      <option value="45deg">45°</option>
+                      <option value="90deg">90° (Down)</option>
+                      <option value="180deg">180° (Left)</option>
+                      <option value="270deg">270° (Up)</option>
+                      <option value="custom">Custom</option>
+                    </select>
+                    <input type="number" id="customLinearAngle" min="0" max="360" value="135" style="display: none;" placeholder="Angle">
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label>Color Stops:</label>
+                  <div class="color-stops" id="linearColorStops">
+                    <!-- Dynamic color stops will be added here -->
+                  </div>
+                  <button class="add-stop" onclick="addLinearColorStop()">+ Add Color Stop</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Radial Gradient Content -->
+            <div id="radialContent" class="wallpaper-content">
+              <div class="gradient-controls">
+                <div class="form-group">
+                  <label>Shape:</label>
+                  <select id="radialShape">
+                    <option value="circle">Circle</option>
+                    <option value="ellipse">Ellipse</option>
+                  </select>
+                </div>
+                
+                <div class="form-group">
+                  <label>Color Stops:</label>
+                  <div class="color-stops" id="radialColorStops">
+                    <!-- Dynamic color stops will be added here -->
+                  </div>
+                  <button class="add-stop" onclick="addRadialColorStop()">+ Add Color Stop</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Presets Content -->
+            <div id="presetsContent" class="wallpaper-content">
+              <div class="presets-grid" id="presetsGrid">
+                <!-- Dynamic presets will be loaded here -->
+              </div>
+            </div>
+
+            <!-- Custom CSS Content -->
+            <div id="customContent" class="wallpaper-content">
+              <div class="custom-css-area">
+                <label>Custom Background CSS:</label>
+                <textarea id="customCSS" placeholder="Enter custom CSS background property...&#10;Examples:&#10;#ff6b6b&#10;linear-gradient(45deg, #ff6b6b, #4ecdc4)&#10;radial-gradient(circle, #ff6b6b, #4ecdc4)"></textarea>
+              </div>
+            </div>
+
+            <!-- Apply Button -->
+            <div style="text-align: center; margin-top: 20px;">
+              <button class="admin-btn success" onclick="applyWallpaper()">Apply Wallpaper</button>
+              <button class="admin-btn" onclick="previewWallpaper()">Preview Only</button>
+            </div>
+          </div>
         </div>
 
         <button class="admin-btn cancel" onclick="closeAdminModal()" style="margin-top: 30px;">Close Admin Panel</button>
@@ -683,12 +1035,14 @@
   </div>
   
   <script>
-    // Enhanced code with full admin functionality
+    // Enhanced code with wallpaper functionality
     class CodeUnlocker {
       constructor() {
         this.API_BASE = 'https://code-unlock-api.thanos.workers.dev';
         this.currentEditingCode = null;
         this.adminPassword = null;
+        this.wallpaperPresets = {};
+        this.currentWallpaperConfig = null;
         this.init();
       }
 
@@ -707,9 +1061,434 @@
         // Setup file upload
         this.setupFileUpload();
         
+        // Load current wallpaper
+        this.loadCurrentWallpaper();
+        
+        // Setup wallpaper controls
+        this.setupWallpaperControls();
+        
         codeInput.focus();
       }
 
+      // NEW: Wallpaper functions
+      async loadCurrentWallpaper() {
+        try {
+          const response = await fetch(`${this.API_BASE}/api/wallpaper/current`);
+          const result = await response.json();
+          
+          if (result.success && result.wallpaper) {
+            this.applyWallpaperToPage(result.wallpaper.css);
+            this.currentWallpaperConfig = result.wallpaper;
+          }
+        } catch (error) {
+          console.error('Error loading wallpaper:', error);
+        }
+      }
+
+      async loadWallpaperPresets() {
+        try {
+          const response = await fetch(`${this.API_BASE}/api/admin/wallpaper/presets`);
+          const result = await response.json();
+          
+          if (result.success) {
+            this.wallpaperPresets = result.presets;
+            this.displayPresets();
+          }
+        } catch (error) {
+          console.error('Error loading presets:', error);
+        }
+      }
+
+      setupWallpaperControls() {
+        // Solid color controls
+        const solidColor = document.getElementById('solidColor');
+        const solidColorHex = document.getElementById('solidColorHex');
+        
+        solidColor.addEventListener('change', (e) => {
+          solidColorHex.value = e.target.value;
+          this.updateWallpaperPreview();
+        });
+        
+        solidColorHex.addEventListener('input', (e) => {
+          if (e.target.value.match(/^#[0-9A-Fa-f]{6}$/)) {
+            solidColor.value = e.target.value;
+            this.updateWallpaperPreview();
+          }
+        });
+
+        // Linear gradient controls
+        const linearDirection = document.getElementById('linearDirection');
+        const customLinearAngle = document.getElementById('customLinearAngle');
+        
+        linearDirection.addEventListener('change', (e) => {
+          if (e.target.value === 'custom') {
+            customLinearAngle.style.display = 'block';
+          } else {
+            customLinearAngle.style.display = 'none';
+          }
+          this.updateWallpaperPreview();
+        });
+        
+        customLinearAngle.addEventListener('input', () => {
+          this.updateWallpaperPreview();
+        });
+
+        // Radial gradient controls
+        const radialShape = document.getElementById('radialShape');
+        radialShape.addEventListener('change', () => {
+          this.updateWallpaperPreview();
+        });
+
+        // Custom CSS
+        const customCSS = document.getElementById('customCSS');
+        customCSS.addEventListener('input', () => {
+          this.updateWallpaperPreview();
+        });
+
+        // Initialize color stops
+        this.initializeColorStops();
+      }
+
+      initializeColorStops() {
+        // Add initial linear gradient stops
+        this.addLinearColorStop('#667eea', 0);
+        this.addLinearColorStop('#764ba2', 100);
+        
+        // Add initial radial gradient stops
+        this.addRadialColorStop('#667eea', 0);
+        this.addRadialColorStop('#764ba2', 100);
+      }
+
+      addLinearColorStop(color = '#667eea', position = 50) {
+        const container = document.getElementById('linearColorStops');
+        const stopDiv = document.createElement('div');
+        stopDiv.className = 'color-stop';
+        stopDiv.innerHTML = `
+          <input type="color" value="${color}" onchange="window.codeUnlockerInstance.updateWallpaperPreview()">
+          <input type="text" value="${color}" placeholder="#667eea" onchange="window.codeUnlockerInstance.syncColorInputs(this)" style="width: 80px;">
+          <input type="range" min="0" max="100" value="${position}" oninput="window.codeUnlockerInstance.updateColorStopPosition(this)">
+          <span class="position-value">${position}%</span>
+          <button class="remove-stop" onclick="window.codeUnlockerInstance.removeColorStop(this, 'linear')">&times;</button>
+        `;
+        container.appendChild(stopDiv);
+        this.updateWallpaperPreview();
+      }
+
+      addRadialColorStop(color = '#667eea', position = 50) {
+        const container = document.getElementById('radialColorStops');
+        const stopDiv = document.createElement('div');
+        stopDiv.className = 'color-stop';
+        stopDiv.innerHTML = `
+          <input type="color" value="${color}" onchange="window.codeUnlockerInstance.updateWallpaperPreview()">
+          <input type="text" value="${color}" placeholder="#667eea" onchange="window.codeUnlockerInstance.syncColorInputs(this)" style="width: 80px;">
+          <input type="range" min="0" max="100" value="${position}" oninput="window.codeUnlockerInstance.updateColorStopPosition(this)">
+          <span class="position-value">${position}%</span>
+          <button class="remove-stop" onclick="window.codeUnlockerInstance.removeColorStop(this, 'radial')">&times;</button>
+        `;
+        container.appendChild(stopDiv);
+        this.updateWallpaperPreview();
+      }
+
+      removeColorStop(button, type) {
+        const container = document.getElementById(type + 'ColorStops');
+        if (container.children.length > 2) { // Keep at least 2 stops
+          button.parentElement.remove();
+          this.updateWallpaperPreview();
+        }
+      }
+
+      updateColorStopPosition(slider) {
+        const positionSpan = slider.nextElementSibling;
+        positionSpan.textContent = slider.value + '%';
+        this.updateWallpaperPreview();
+      }
+
+      syncColorInputs(input) {
+        if (input.value.match(/^#[0-9A-Fa-f]{6}$/)) {
+          const colorPicker = input.previousElementSibling;
+          colorPicker.value = input.value;
+          this.updateWallpaperPreview();
+        }
+      }
+
+      updateWallpaperPreview() {
+        const activeTab = document.querySelector('.wallpaper-tab.active').textContent.toLowerCase().replace(' ', '');
+        const preview = document.getElementById('wallpaperPreview');
+        let css = '';
+
+        switch(activeTab) {
+          case 'solidcolor':
+            const solidColor = document.getElementById('solidColor').value;
+            css = solidColor;
+            break;
+            
+          case 'lineargradient':
+            css = this.generateLinearGradientCSS();
+            break;
+            
+          case 'radialgradient':
+            css = this.generateRadialGradientCSS();
+            break;
+            
+          case 'custom':
+            css = document.getElementById('customCSS').value.trim();
+            break;
+        }
+
+        if (css) {
+          preview.style.background = css;
+        }
+      }
+
+      generateLinearGradientCSS() {
+        const direction = document.getElementById('linearDirection').value;
+        const customAngle = document.getElementById('customLinearAngle').value;
+        const container = document.getElementById('linearColorStops');
+        
+        let angle = direction === 'custom' ? customAngle + 'deg' : direction;
+        
+        const stops = Array.from(container.children).map(stop => {
+          const color = stop.querySelector('input[type="color"]').value;
+          const position = stop.querySelector('input[type="range"]').value;
+          return `${color} ${position}%`;
+        });
+
+        return `linear-gradient(${angle}, ${stops.join(', ')})`;
+      }
+
+      generateRadialGradientCSS() {
+        const shape = document.getElementById('radialShape').value;
+        const container = document.getElementById('radialColorStops');
+        
+        const stops = Array.from(container.children).map(stop => {
+          const color = stop.querySelector('input[type="color"]').value;
+          const position = stop.querySelector('input[type="range"]').value;
+          return `${color} ${position}%`;
+        });
+
+        return `radial-gradient(${shape}, ${stops.join(', ')})`;
+      }
+
+      displayPresets() {
+        const grid = document.getElementById('presetsGrid');
+        grid.innerHTML = '';
+        
+        Object.entries(this.wallpaperPresets).forEach(([key, preset]) => {
+          const presetDiv = document.createElement('div');
+          presetDiv.className = 'preset-item';
+          presetDiv.onclick = () => this.selectPreset(key, presetDiv);
+          
+          presetDiv.innerHTML = `
+            <div class="preset-thumbnail" style="background: ${preset.css}"></div>
+            <div class="preset-name">${preset.name}</div>
+          `;
+          
+          grid.appendChild(presetDiv);
+        });
+      }
+
+      selectPreset(presetKey, element) {
+        // Remove previous selection
+        document.querySelectorAll('.preset-item').forEach(item => {
+          item.classList.remove('selected');
+        });
+        
+        // Select current preset
+        element.classList.add('selected');
+        
+        // Update preview
+        const preset = this.wallpaperPresets[presetKey];
+        const preview = document.getElementById('wallpaperPreview');
+        preview.style.background = preset.css;
+      }
+
+      async previewWallpaper() {
+        const activeTab = document.querySelector('.wallpaper-tab.active').textContent.toLowerCase().replace(' ', '');
+        let css = '';
+        let config = {};
+        let type = '';
+        let name = 'Custom Wallpaper';
+
+        switch(activeTab) {
+          case 'solidcolor':
+            const solidColor = document.getElementById('solidColor').value;
+            css = solidColor;
+            type = 'solid';
+            config = { color: solidColor };
+            name = `Solid Color (${solidColor})`;
+            break;
+            
+          case 'lineargradient':
+            css = this.generateLinearGradientCSS();
+            type = 'linear-gradient';
+            config = this.getLinearGradientConfig();
+            name = 'Linear Gradient';
+            break;
+            
+          case 'radialgradient':
+            css = this.generateRadialGradientCSS();
+            type = 'radial-gradient';
+            config = this.getRadialGradientConfig();
+            name = 'Radial Gradient';
+            break;
+            
+          case 'presets':
+            const selectedPreset = document.querySelector('.preset-item.selected');
+            if (!selectedPreset) {
+              alert('Please select a preset first');
+              return;
+            }
+            const presetKey = Object.keys(this.wallpaperPresets)[Array.from(selectedPreset.parentNode.children).indexOf(selectedPreset)];
+            const preset = this.wallpaperPresets[presetKey];
+            css = preset.css;
+            type = preset.type;
+            config = preset.config;
+            name = preset.name;
+            break;
+            
+          case 'custom':
+            css = document.getElementById('customCSS').value.trim();
+            type = 'custom';
+            config = { css: css };
+            name = 'Custom CSS';
+            break;
+        }
+
+        if (!css) {
+          alert('Please configure a wallpaper first');
+          return;
+        }
+
+        this.applyWallpaperToPage(css);
+      }
+
+      async applyWallpaper() {
+        const activeTab = document.querySelector('.wallpaper-tab.active').textContent.toLowerCase().replace(' ', '');
+        let css = '';
+        let config = {};
+        let type = '';
+        let name = 'Custom Wallpaper';
+
+        switch(activeTab) {
+          case 'solidcolor':
+            const solidColor = document.getElementById('solidColor').value;
+            css = solidColor;
+            type = 'solid';
+            config = { color: solidColor };
+            name = `Solid Color (${solidColor})`;
+            break;
+            
+          case 'lineargradient':
+            css = this.generateLinearGradientCSS();
+            type = 'linear-gradient';
+            config = this.getLinearGradientConfig();
+            name = 'Linear Gradient';
+            break;
+            
+          case 'radialgradient':
+            css = this.generateRadialGradientCSS();
+            type = 'radial-gradient';
+            config = this.getRadialGradientConfig();
+            name = 'Radial Gradient';
+            break;
+            
+          case 'presets':
+            const selectedPreset = document.querySelector('.preset-item.selected');
+            if (!selectedPreset) {
+              alert('Please select a preset first');
+              return;
+            }
+            const presetKey = Object.keys(this.wallpaperPresets)[Array.from(selectedPreset.parentNode.children).indexOf(selectedPreset)];
+            const preset = this.wallpaperPresets[presetKey];
+            css = preset.css;
+            type = preset.type;
+            config = preset.config;
+            name = preset.name;
+            break;
+            
+          case 'custom':
+            css = document.getElementById('customCSS').value.trim();
+            type = 'custom';
+            config = { css: css };
+            name = 'Custom CSS';
+            break;
+        }
+
+        if (!css) {
+          alert('Please configure a wallpaper first');
+          return;
+        }
+
+        const wallpaperConfig = {
+          type: type,
+          css: css,
+          name: name,
+          config: config
+        };
+
+        try {
+          const response = await fetch(`${this.API_BASE}/api/admin/wallpaper/set`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              password: this.adminPassword,
+              wallpaper: wallpaperConfig
+            })
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            this.applyWallpaperToPage(css);
+            this.currentWallpaperConfig = wallpaperConfig;
+            alert('Wallpaper applied successfully!');
+          } else {
+            alert(result.error || 'Failed to apply wallpaper');
+          }
+        } catch (error) {
+          console.error('Error applying wallpaper:', error);
+          alert('Error applying wallpaper');
+        }
+      }
+
+      getLinearGradientConfig() {
+        const direction = document.getElementById('linearDirection').value;
+        const customAngle = document.getElementById('customLinearAngle').value;
+        const container = document.getElementById('linearColorStops');
+        
+        const colorStops = Array.from(container.children).map(stop => ({
+          color: stop.querySelector('input[type="color"]').value,
+          position: stop.querySelector('input[type="range"]').value + '%'
+        }));
+
+        return {
+          direction: direction === 'custom' ? customAngle + 'deg' : direction,
+          colorStops: colorStops
+        };
+      }
+
+      getRadialGradientConfig() {
+        const shape = document.getElementById('radialShape').value;
+        const container = document.getElementById('radialColorStops');
+        
+        const colorStops = Array.from(container.children).map(stop => ({
+          color: stop.querySelector('input[type="color"]').value,
+          position: stop.querySelector('input[type="range"]').value + '%'
+        }));
+
+        return {
+          shape: shape,
+          colorStops: colorStops
+        };
+      }
+
+      applyWallpaperToPage(css) {
+        document.documentElement.style.setProperty('--wallpaper-bg', css);
+      }
+
+      // Existing functions...
       async checkCode() {
         const input = document.getElementById("codeInput").value.trim();
         const submitBtn = document.getElementById("submitBtn");
@@ -804,7 +1583,8 @@
       async loadAdminData() {
         await Promise.all([
           this.loadCodes(),
-          this.loadFiles()
+          this.loadFiles(),
+          this.loadWallpaperPresets()
         ]);
         this.updateStats();
       }
@@ -881,28 +1661,11 @@
               <div class="file">${file}</div>
             </div>
             <div class="actions">
-              <button class="admin-btn edit-btn" data-code="${encodeURIComponent(code)}" data-file="${encodeURIComponent(file)}">Edit</button>
-              <button class="admin-btn danger delete-btn" data-code="${encodeURIComponent(code)}">Delete</button>
+              <button class="admin-btn" onclick="window.codeUnlockerInstance.editCode('${code}', '${file}')">Edit</button>
+              <button class="admin-btn danger" onclick="window.codeUnlockerInstance.deleteCode('${code}')">Delete</button>
             </div>
           `;
           codesList.appendChild(codeItem);
-
-          // attach event listeners instead of inline onclick
-          const editBtn = codeItem.querySelector(".edit-btn");
-          const deleteBtn = codeItem.querySelector(".delete-btn");
-
-          editBtn.addEventListener("click", () => {
-            this.editCode(
-              decodeURIComponent(editBtn.dataset.code),
-              decodeURIComponent(editBtn.dataset.file)
-            );
-          });
-
-          deleteBtn.addEventListener("click", () => {
-            this.deleteCode(
-              decodeURIComponent(deleteBtn.dataset.code)
-            );
-          });
         });
       }
 
@@ -1256,7 +2019,44 @@
       // Load data if needed
       if (tabName === 'files') {
         window.codeUnlockerInstance.loadFiles();
+      } else if (tabName === 'wallpaper') {
+        window.codeUnlockerInstance.loadWallpaperPresets();
       }
+    }
+
+    // NEW: Wallpaper tab functions
+    function switchWallpaperTab(tabName) {
+      // Hide all wallpaper content
+      document.querySelectorAll('.wallpaper-content').forEach(content => {
+        content.classList.remove('active');
+      });
+      document.querySelectorAll('.wallpaper-tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+
+      // Show selected content
+      const contentId = tabName + 'Content';
+      document.getElementById(contentId).classList.add('active');
+      document.querySelector(`[onclick="switchWallpaperTab('${tabName}')"]`).classList.add('active');
+
+      // Update preview for current tab
+      window.codeUnlockerInstance.updateWallpaperPreview();
+    }
+
+    function addLinearColorStop() {
+      window.codeUnlockerInstance.addLinearColorStop();
+    }
+
+    function addRadialColorStop() {
+      window.codeUnlockerInstance.addRadialColorStop();
+    }
+
+    function previewWallpaper() {
+      window.codeUnlockerInstance.previewWallpaper();
+    }
+
+    function applyWallpaper() {
+      window.codeUnlockerInstance.applyWallpaper();
     }
 
     function refreshFiles() {
