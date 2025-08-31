@@ -881,11 +881,28 @@
               <div class="file">${file}</div>
             </div>
             <div class="actions">
-              <button class="admin-btn" onclick="window.codeUnlockerInstance.editCode('${code}', '${file}')">Edit</button>
-              <button class="admin-btn danger" onclick="window.codeUnlockerInstance.deleteCode('${code}')">Delete</button>
+              <button class="admin-btn edit-btn" data-code="${encodeURIComponent(code)}" data-file="${encodeURIComponent(file)}">Edit</button>
+              <button class="admin-btn danger delete-btn" data-code="${encodeURIComponent(code)}">Delete</button>
             </div>
           `;
           codesList.appendChild(codeItem);
+
+          // attach event listeners instead of inline onclick
+          const editBtn = codeItem.querySelector(".edit-btn");
+          const deleteBtn = codeItem.querySelector(".delete-btn");
+
+          editBtn.addEventListener("click", () => {
+            this.editCode(
+              decodeURIComponent(editBtn.dataset.code),
+              decodeURIComponent(editBtn.dataset.file)
+            );
+          });
+
+          deleteBtn.addEventListener("click", () => {
+            this.deleteCode(
+              decodeURIComponent(deleteBtn.dataset.code)
+            );
+          });
         });
       }
 
