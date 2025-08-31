@@ -34,4 +34,18 @@ Enter the given code into the text box, then press Enter or click the button to 
 **Release Notes**
 - Thanos Snap: Invalid codes will now have a 1/2 chance of redirecting to nothing.jpg! (Just kidding, revoked in 5 seconds)
 
+## v2.2
+**Release Notes**
+- Added easter egg: Code 'cool' will now redirect to something cool (or nothing)
 
+## v2.1
+**Release Notes**
+- Admin Update: Admins can now view all available codes through the admin panel
+
+## v2.0
+**Release Notes**
+- UI & UX upgrade: Big changes coming! First deployment
+
+## v1.0
+**Release Notes**
+- Prototyping: Basic functionality and UI completed
