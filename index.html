@@ -4,7 +4,567 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Code Unlock Download</title>
-  <link rel="stylesheet" href="styles.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      width: 100%;
+      max-width: 400px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .icon {
+      font-size: 48px;
+      margin-bottom: 20px;
+      opacity: 0.8;
+    }
+
+    h2 {
+      color: #333;
+      margin-bottom: 30px;
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 25px;
+    }
+
+    #codeInput {
+      width: 100%;
+      padding: 15px 20px;
+      border: 2px solid #e1e8ed;
+      border-radius: 12px;
+      font-size: 16px;
+      background: rgba(255, 255, 255, 0.9);
+      transition: all 0.3s ease;
+      outline: none;
+    }
+
+    #codeInput:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      transform: translateY(-1px);
+    }
+
+    #codeInput::placeholder {
+      color: #a0a0a0;
+    }
+
+    #submitBtn {
+      width: 100%;
+      padding: 15px 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #submitBtn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    }
+
+    #submitBtn:active {
+      transform: translateY(0);
+    }
+
+    #submitBtn.loading {
+      pointer-events: none;
+      opacity: 0.8;
+    }
+
+    .spinner {
+      display: none;
+      width: 20px;
+      height: 20px;
+      border: 2px solid transparent;
+      border-top: 2px solid white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    #message {
+      margin-top: 20px;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: 500;
+      min-height: 20px;
+      transition: all 0.3s ease;
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    #message.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    #message.success {
+      background: rgba(46, 204, 113, 0.1);
+      color: #27ae60;
+      border: 1px solid rgba(46, 204, 113, 0.3);
+    }
+
+    #message.error {
+      background: rgba(231, 76, 60, 0.1);
+      color: #e74c3c;
+      border: 1px solid rgba(231, 76, 60, 0.3);
+    }
+
+    #message.info {
+      background: rgba(52, 152, 219, 0.1);
+      color: #3498db;
+      border: 1px solid rgba(52, 152, 219, 0.3);
+    }
+
+    .hint {
+      margin-top: 20px;
+      color: #666;
+      font-size: 14px;
+      opacity: 0.8;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 30px 20px;
+        margin: 10px;
+      }
+      
+      h2 {
+        font-size: 20px;
+      }
+    }
+
+    /* Subtle pulse animation for the container */
+    @keyframes pulse {
+      0% { box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2); }
+      50% { box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25); }
+      100% { box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2); }
+    }
+
+    .container {
+      animation: pulse 4s ease-in-out infinite;
+    }
+
+    /* Admin panel styles */
+    .admin-icon {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      width: 20px;
+      height: 20px;
+      opacity: 0.01;
+      cursor: pointer;
+      font-size: 16px;
+      color: #666;
+      transition: opacity 0.3s ease;
+      z-index: 1000;
+    }
+
+    .admin-icon:hover {
+      opacity: 0.1;
+    }
+
+    .admin-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .admin-modal.show {
+      display: flex;
+    }
+
+    .admin-panel {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 30px;
+      max-width: 900px;
+      width: 95%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .admin-panel h3 {
+      color: #333;
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 24px;
+    }
+
+    .admin-tabs {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 25px;
+      border-bottom: 2px solid #e1e8ed;
+    }
+
+    .admin-tab {
+      background: none;
+      border: none;
+      padding: 12px 20px;
+      font-size: 14px;
+      cursor: pointer;
+      color: #666;
+      border-bottom: 2px solid transparent;
+      transition: all 0.3s ease;
+      margin: 0 10px;
+    }
+
+    .admin-tab.active {
+      color: #667eea;
+      border-bottom-color: #667eea;
+    }
+
+    .admin-tab:hover {
+      color: #667eea;
+    }
+
+    .admin-content {
+      display: none;
+    }
+
+    .admin-content.active {
+      display: block;
+    }
+
+    .admin-input, .admin-select {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e1e8ed;
+      border-radius: 8px;
+      font-size: 14px;
+      margin-bottom: 15px;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    .admin-input:focus, .admin-select:focus {
+      border-color: #667eea;
+    }
+
+    .admin-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-size: 14px;
+      cursor: pointer;
+      margin-right: 10px;
+      margin-bottom: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .admin-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+
+    .admin-btn.cancel {
+      background: #95a5a6;
+    }
+
+    .admin-btn.danger {
+      background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    }
+
+    .admin-btn.success {
+      background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+    }
+
+    .codes-list {
+      margin-top: 20px;
+    }
+
+    .code-item {
+      background: rgba(102, 126, 234, 0.1);
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-left: 4px solid #667eea;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .code-item .code-info {
+      flex: 1;
+    }
+
+    .code-item .code {
+      font-weight: bold;
+      color: #667eea;
+      font-family: monospace;
+      margin-bottom: 4px;
+      font-size: 16px;
+    }
+
+    .code-item .file {
+      color: #666;
+      font-size: 13px;
+    }
+
+    .code-item .actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .code-item .actions button {
+      padding: 6px 12px;
+      font-size: 12px;
+      min-width: auto;
+    }
+
+    .files-list {
+      margin-top: 20px;
+    }
+
+    .file-item {
+      background: rgba(52, 152, 219, 0.1);
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-left: 4px solid #3498db;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .file-item .file-info {
+      flex: 1;
+    }
+
+    .file-item .file-name {
+      font-weight: bold;
+      color: #3498db;
+      font-family: monospace;
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+
+    .file-item .file-details {
+      color: #666;
+      font-size: 12px;
+    }
+
+    .file-item .file-status {
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: bold;
+      margin-left: 10px;
+    }
+
+    .file-item .file-status.linked {
+      background: #27ae60;
+      color: white;
+    }
+
+    .file-item .file-status.unlinked {
+      background: #f39c12;
+      color: white;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 15px;
+      align-items: end;
+    }
+
+    .form-row .form-group {
+      flex: 1;
+      margin-bottom: 0;
+    }
+
+    .upload-area {
+      border: 2px dashed #667eea;
+      border-radius: 8px;
+      padding: 30px;
+      text-align: center;
+      background: rgba(102, 126, 234, 0.05);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .upload-area:hover {
+      background: rgba(102, 126, 234, 0.1);
+    }
+
+    .upload-area.dragover {
+      background: rgba(102, 126, 234, 0.15);
+      border-color: #5a6fd8;
+    }
+
+    .upload-icon {
+      font-size: 32px;
+      margin-bottom: 10px;
+      color: #667eea;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 3000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 12px;
+      padding: 25px;
+      max-width: 500px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .modal-header h4 {
+      margin: 0;
+      color: #333;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #999;
+      padding: 0;
+      width: 30px;
+      height: 30px;
+    }
+
+    .close-btn:hover {
+      color: #333;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      opacity: 0.9;
+    }
+
+    @media (max-width: 768px) {
+      .admin-panel {
+        padding: 20px;
+        max-width: 100%;
+        max-height: 95vh;
+      }
+
+      .form-row {
+        flex-direction: column;
+      }
+
+      .admin-tabs {
+        flex-wrap: wrap;
+      }
+
+      .code-item, .file-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .code-item .actions, .file-item .actions {
+        width: 100%;
+        justify-content: flex-start;
+      }
+    }
+  </style>
 </head>
 <body>
   <!-- Admin icon in corner -->
@@ -20,13 +580,94 @@
         <button class="admin-btn cancel" onclick="closeAdminModal()">Cancel</button>
       </div>
       <div id="adminContent" style="display: none;">
-        <h4>All Access Codes:</h4>
-        <div class="codes-list" id="codesList"></div>
-        <button class="admin-btn cancel" onclick="closeAdminModal()" style="margin-top: 20px;">Close</button>
+        <!-- Stats Dashboard -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-number" id="totalCodes">0</div>
+            <div class="stat-label">Access Codes</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="totalFiles">0</div>
+            <div class="stat-label">Files</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="linkedFiles">0</div>
+            <div class="stat-label">Linked Files</div>
+          </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="admin-tabs">
+          <button class="admin-tab active" onclick="switchTab('codes')">Manage Codes</button>
+          <button class="admin-tab" onclick="switchTab('files')">File Manager</button>
+          <button class="admin-tab" onclick="switchTab('upload')">Upload Files</button>
+        </div>
+
+        <!-- Codes Tab -->
+        <div id="codesTab" class="admin-content active">
+          <div class="form-group">
+            <label>Add New Code</label>
+            <div class="form-row">
+              <div class="form-group">
+                <input type="text" class="admin-input" id="newCode" placeholder="Access code">
+              </div>
+              <div class="form-group">
+                <select class="admin-select" id="newCodeFile">
+                  <option value="">Select file...</option>
+                </select>
+              </div>
+              <button class="admin-btn success" onclick="addCode()">Add Code</button>
+            </div>
+          </div>
+          
+          <h4>Existing Codes:</h4>
+          <div class="codes-list" id="codesList"></div>
+        </div>
+
+        <!-- Files Tab -->
+        <div id="filesTab" class="admin-content">
+          <button class="admin-btn" onclick="refreshFiles()">🔄 Refresh Files</button>
+          <div class="files-list" id="filesList"></div>
+        </div>
+
+        <!-- Upload Tab -->
+        <div id="uploadTab" class="admin-content">
+          <div class="upload-area" id="uploadArea">
+            <div class="upload-icon">📁</div>
+            <p>Drag & drop files here or click to browse</p>
+            <input type="file" id="fileInput" style="display: none;" multiple>
+          </div>
+          <div id="uploadProgress" style="margin-top: 20px;"></div>
+        </div>
+
+        <button class="admin-btn cancel" onclick="closeAdminModal()" style="margin-top: 30px;">Close Admin Panel</button>
       </div>
     </div>
   </div>
 
+  <!-- Edit Code Modal -->
+  <div class="modal" id="editCodeModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4>Edit Access Code</h4>
+        <button class="close-btn" onclick="closeEditModal()">&times;</button>
+      </div>
+      <div class="form-group">
+        <label>Access Code</label>
+        <input type="text" class="admin-input" id="editCode">
+      </div>
+      <div class="form-group">
+        <label>Linked File</label>
+        <select class="admin-select" id="editCodeFile">
+          <option value="">Select file...</option>
+        </select>
+      </div>
+      <button class="admin-btn success" onclick="updateCode()">Update Code</button>
+      <button class="admin-btn cancel" onclick="closeEditModal()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Main unlock interface -->
   <div class="container">
     <div class="icon">🔓</div>
     <h2>Enter Your Access Code</h2>
@@ -41,6 +682,602 @@
     <div class="hint">Press Enter or click the button to submit</div>
   </div>
   
-  <script src="script.js"></script>
+  <script>
+    // Enhanced code with full admin functionality
+    class CodeUnlocker {
+      constructor() {
+        this.API_BASE = 'https://code-unlock-api.thanos.workers.dev';
+        this.currentEditingCode = null;
+        this.adminPassword = null;
+        this.init();
+      }
+
+      init() {
+        const submitBtn = document.getElementById("submitBtn");
+        const codeInput = document.getElementById("codeInput");
+        
+        submitBtn.addEventListener("click", () => this.checkCode());
+        
+        codeInput.addEventListener("keypress", (e) => {
+          if (e.key === "Enter") {
+            this.checkCode();
+          }
+        });
+        
+        // Setup file upload
+        this.setupFileUpload();
+        
+        codeInput.focus();
+      }
+
+      async checkCode() {
+        const input = document.getElementById("codeInput").value.trim();
+        const submitBtn = document.getElementById("submitBtn");
+        const btnText = document.getElementById("btnText");
+        const spinner = document.getElementById("spinner");
+        
+        if (!input) {
+          this.showMessage("Please enter a code", "error");
+          return;
+        }
+
+        submitBtn.classList.add("loading");
+        btnText.style.display = "none";
+        spinner.style.display = "block";
+
+        try {
+          const response = await fetch(`${this.API_BASE}/api/unlock`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ code: input })
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            this.downloadFile(result.downloadUrl, result.fileName);
+            document.getElementById("codeInput").value = "";
+          } else {
+            this.showMessage(result.error || "Invalid code. Please try again!", "error");
+          }
+
+        } catch (error) {
+          console.error('API error:', error);
+          this.showMessage("Connection error. Please try again!", "error");
+        }
+
+        submitBtn.classList.remove("loading");
+        btnText.style.display = "inline";
+        spinner.style.display = "none";
+      }
+
+      async downloadFile(downloadUrl, fileName) {
+        try {
+          this.showMessage("Download starting...", "success");
+          
+          const response = await fetch(`${this.API_BASE}${downloadUrl}`);
+          
+          if (!response.ok) {
+            throw new Error('Download failed');
+          }
+
+          const blob = await response.blob();
+          
+          const link = document.createElement("a");
+          link.href = URL.createObjectURL(blob);
+          link.download = fileName;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          
+          URL.revokeObjectURL(link.href);
+          
+          setTimeout(() => {
+            this.showMessage("File download completed successfully! ✨", "success");
+          }, 1000);
+          
+        } catch (error) {
+          this.showMessage("Download failed. Please try again.", "error");
+          console.error("Download error:", error);
+        }
+      }
+
+      showMessage(text, type) {
+        const msg = document.getElementById("message");
+        msg.textContent = text;
+        msg.className = `${type} show`;
+        
+        if (this.messageTimeout) {
+          clearTimeout(this.messageTimeout);
+        }
+        
+        if (type === "success") {
+          this.messageTimeout = setTimeout(() => {
+            msg.classList.remove("show");
+          }, 5000);
+        }
+      }
+
+      // Admin functions
+      async loadAdminData() {
+        await Promise.all([
+          this.loadCodes(),
+          this.loadFiles()
+        ]);
+        this.updateStats();
+      }
+
+      async loadCodes() {
+        try {
+          const response = await fetch(`${this.API_BASE}/api/admin/codes`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ password: this.adminPassword })
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            this.displayCodes(result.codes);
+            this.populateFileSelects(await this.getFilesList());
+          }
+        } catch (error) {
+          console.error('Error loading codes:', error);
+        }
+      }
+
+      async loadFiles() {
+        try {
+          const response = await fetch(`${this.API_BASE}/api/admin/files`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ password: this.adminPassword })
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            this.displayFiles(result.files);
+          }
+        } catch (error) {
+          console.error('Error loading files:', error);
+        }
+      }
+
+      async getFilesList() {
+        try {
+          const response = await fetch(`${this.API_BASE}/api/admin/files`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ password: this.adminPassword })
+          });
+
+          const result = await response.json();
+          return result.success ? result.files : [];
+        } catch (error) {
+          console.error('Error getting files list:', error);
+          return [];
+        }
+      }
+
+      displayCodes(codes) {
+        const codesList = document.getElementById("codesList");
+        codesList.innerHTML = "";
+        
+        Object.entries(codes).forEach(([code, file]) => {
+          const codeItem = document.createElement("div");
+          codeItem.className = "code-item";
+          codeItem.innerHTML = `
+            <div class="code-info">
+              <div class="code">${code}</div>
+              <div class="file">${file}</div>
+            </div>
+            <div class="actions">
+              <button class="admin-btn" onclick="window.codeUnlockerInstance.editCode('${code}', '${file}')">Edit</button>
+              <button class="admin-btn danger" onclick="window.codeUnlockerInstance.deleteCode('${code}')">Delete</button>
+            </div>
+          `;
+          codesList.appendChild(codeItem);
+        });
+      }
+
+      displayFiles(files) {
+        const filesList = document.getElementById("filesList");
+        filesList.innerHTML = "";
+        
+        files.forEach(file => {
+          const fileItem = document.createElement("div");
+          fileItem.className = "file-item";
+          fileItem.innerHTML = `
+            <div class="file-info">
+              <div class="file-name">${file.name}</div>
+              <div class="file-details">
+                Size: ${this.formatFileSize(file.size)} | 
+                Modified: ${new Date(file.lastModified).toLocaleDateString()}
+              </div>
+            </div>
+            <div class="file-status ${file.hasCode ? 'linked' : 'unlinked'}">
+              ${file.hasCode ? 'Linked' : 'Unlinked'}
+            </div>
+            ${!file.hasCode ? `<button class="admin-btn danger" onclick="window.codeUnlockerInstance.deleteFile('${file.name}')">Delete</button>` : ''}
+          `;
+          filesList.appendChild(fileItem);
+        });
+      }
+
+      populateFileSelects(files) {
+        const selects = [document.getElementById("newCodeFile"), document.getElementById("editCodeFile")];
+        
+        selects.forEach(select => {
+          const currentValue = select.value;
+          select.innerHTML = '<option value="">Select file...</option>';
+          
+          files.forEach(file => {
+            const option = document.createElement("option");
+            option.value = file.name;
+            option.textContent = file.name;
+            if (file.name === currentValue) {
+              option.selected = true;
+            }
+            select.appendChild(option);
+          });
+        });
+      }
+
+      async addCode() {
+        const code = document.getElementById("newCode").value.trim();
+        const fileName = document.getElementById("newCodeFile").value;
+
+        if (!code || !fileName) {
+          alert("Please enter both code and select a file");
+          return;
+        }
+
+        try {
+          const response = await fetch(`${this.API_BASE}/api/admin/codes/add`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+              password: this.adminPassword,
+              code: code,
+              fileName: fileName
+            })
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            document.getElementById("newCode").value = "";
+            document.getElementById("newCodeFile").value = "";
+            this.loadAdminData();
+            alert("Code added successfully!");
+          } else {
+            alert(result.error || "Failed to add code");
+          }
+        } catch (error) {
+          console.error('Error adding code:', error);
+          alert("Error adding code");
+        }
+      }
+
+      editCode(code, file) {
+        this.currentEditingCode = code;
+        document.getElementById("editCode").value = code;
+        document.getElementById("editCodeFile").value = file;
+        document.getElementById("editCodeModal").classList.add("show");
+      }
+
+      async updateCode() {
+        const newCode = document.getElementById("editCode").value.trim();
+        const newFile = document.getElementById("editCodeFile").value;
+
+        if (!newCode || !newFile) {
+          alert("Please enter both code and select a file");
+          return;
+        }
+
+        try {
+          const response = await fetch(`${this.API_BASE}/api/admin/codes/update`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+              password: this.adminPassword,
+              oldCode: this.currentEditingCode,
+              newCode: newCode,
+              fileName: newFile
+            })
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            this.closeEditModal();
+            this.loadAdminData();
+            alert("Code updated successfully!");
+          } else {
+            alert(result.error || "Failed to update code");
+          }
+        } catch (error) {
+          console.error('Error updating code:', error);
+          alert("Error updating code");
+        }
+      }
+
+      async deleteCode(code) {
+        if (!confirm(`Are you sure you want to delete the code "${code}"?`)) {
+          return;
+        }
+
+        try {
+          const response = await fetch(`${this.API_BASE}/api/admin/codes/delete`, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+              password: this.adminPassword,
+              code: code
+            })
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            this.loadAdminData();
+            alert("Code deleted successfully!");
+          } else {
+            alert(result.error || "Failed to delete code");
+          }
+        } catch (error) {
+          console.error('Error deleting code:', error);
+          alert("Error deleting code");
+        }
+      }
+
+      async deleteFile(fileName) {
+        if (!confirm(`Are you sure you want to delete the file "${fileName}"?`)) {
+          return;
+        }
+
+        try {
+          const response = await fetch(`${this.API_BASE}/api/admin/files/delete`, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+              password: this.adminPassword,
+              fileName: fileName
+            })
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            this.loadAdminData();
+            alert("File deleted successfully!");
+          } else {
+            alert(result.error || "Failed to delete file");
+          }
+        } catch (error) {
+          console.error('Error deleting file:', error);
+          alert("Error deleting file");
+        }
+      }
+
+      async uploadFiles(files) {
+        const progressDiv = document.getElementById("uploadProgress");
+        progressDiv.innerHTML = "";
+
+        for (let file of files) {
+          const fileDiv = document.createElement("div");
+          fileDiv.innerHTML = `<p>Uploading ${file.name}...</p>`;
+          progressDiv.appendChild(fileDiv);
+
+          try {
+            const formData = new FormData();
+            formData.append('password', this.adminPassword);
+            formData.append('file', file);
+
+            const response = await fetch(`${this.API_BASE}/api/admin/upload`, {
+              method: 'POST',
+              body: formData
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+              fileDiv.innerHTML = `<p style="color: green;">✅ ${file.name} uploaded successfully</p>`;
+            } else {
+              fileDiv.innerHTML = `<p style="color: red;">❌ ${file.name}: ${result.error}</p>`;
+            }
+          } catch (error) {
+            fileDiv.innerHTML = `<p style="color: red;">❌ ${file.name}: Upload failed</p>`;
+            console.error('Upload error:', error);
+          }
+        }
+
+        // Refresh files list after uploads
+        setTimeout(() => {
+          this.loadAdminData();
+          progressDiv.innerHTML = "";
+        }, 2000);
+      }
+
+      setupFileUpload() {
+        const uploadArea = document.getElementById("uploadArea");
+        const fileInput = document.getElementById("fileInput");
+
+        uploadArea.addEventListener("click", () => fileInput.click());
+
+        uploadArea.addEventListener("dragover", (e) => {
+          e.preventDefault();
+          uploadArea.classList.add("dragover");
+        });
+
+        uploadArea.addEventListener("dragleave", () => {
+          uploadArea.classList.remove("dragover");
+        });
+
+        uploadArea.addEventListener("drop", (e) => {
+          e.preventDefault();
+          uploadArea.classList.remove("dragover");
+          
+          if (this.adminPassword) {
+            this.uploadFiles(Array.from(e.dataTransfer.files));
+          }
+        });
+
+        fileInput.addEventListener("change", (e) => {
+          if (this.adminPassword) {
+            this.uploadFiles(Array.from(e.target.files));
+          }
+          fileInput.value = "";
+        });
+      }
+
+      updateStats() {
+        // This will be called after loading codes and files
+        const codesCount = document.getElementById("codesList").children.length;
+        const filesCount = document.getElementById("filesList").children.length;
+        const linkedCount = document.querySelectorAll(".file-status.linked").length;
+
+        document.getElementById("totalCodes").textContent = codesCount;
+        document.getElementById("totalFiles").textContent = filesCount;
+        document.getElementById("linkedFiles").textContent = linkedCount;
+      }
+
+      closeEditModal() {
+        document.getElementById("editCodeModal").classList.remove("show");
+        this.currentEditingCode = null;
+      }
+
+      formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+      }
+    }
+
+    // Initialize when DOM is loaded
+    document.addEventListener("DOMContentLoaded", () => {
+      window.codeUnlockerInstance = new CodeUnlocker();
+    });
+
+    // Admin panel functionality
+    document.getElementById("adminIcon").addEventListener("click", () => {
+      document.getElementById("adminModal").classList.add("show");
+      document.getElementById("adminPassword").focus();
+    });
+
+    document.getElementById("adminPassword").addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        checkAdminPassword();
+      }
+    });
+
+    async function checkAdminPassword() {
+      const password = document.getElementById("adminPassword").value;
+      
+      try {
+        const response = await fetch(`${window.codeUnlockerInstance.API_BASE}/api/admin/codes`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ password: password })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          window.codeUnlockerInstance.adminPassword = password;
+          document.getElementById("adminLogin").style.display = "none";
+          document.getElementById("adminContent").style.display = "block";
+          document.getElementById("adminPassword").value = "";
+          
+          // Load admin data
+          await window.codeUnlockerInstance.loadAdminData();
+        } else {
+          alert("Incorrect password!");
+          document.getElementById("adminPassword").value = "";
+          document.getElementById("adminPassword").focus();
+        }
+      } catch (error) {
+        console.error('Admin API error:', error);
+        alert("Connection error. Please try again!");
+      }
+    }
+
+    function switchTab(tabName) {
+      // Hide all tabs
+      document.querySelectorAll('.admin-content').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      document.querySelectorAll('.admin-tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+
+      // Show selected tab
+      document.getElementById(tabName + 'Tab').classList.add('active');
+      document.querySelector(`[onclick="switchTab('${tabName}')"]`).classList.add('active');
+
+      // Load data if needed
+      if (tabName === 'files') {
+        window.codeUnlockerInstance.loadFiles();
+      }
+    }
+
+    function refreshFiles() {
+      window.codeUnlockerInstance.loadFiles();
+    }
+
+    function addCode() {
+      window.codeUnlockerInstance.addCode();
+    }
+
+    function closeAdminModal() {
+      document.getElementById("adminModal").classList.remove("show");
+      document.getElementById("adminLogin").style.display = "block";
+      document.getElementById("adminContent").style.display = "none";
+      document.getElementById("adminPassword").value = "";
+      window.codeUnlockerInstance.adminPassword = null;
+    }
+
+    function closeEditModal() {
+      window.codeUnlockerInstance.closeEditModal();
+    }
+
+    function updateCode() {
+      window.codeUnlockerInstance.updateCode();
+    }
+
+    // Close modals when clicking outside
+    document.getElementById("adminModal").addEventListener("click", (e) => {
+      if (e.target.id === "adminModal") {
+        closeAdminModal();
+      }
+    });
+
+    document.getElementById("editCodeModal").addEventListener("click", (e) => {
+      if (e.target.id === "editCodeModal") {
+        closeEditModal();
+      }
+    });
+  </script>
 </body>
 </html>
