@@ -4,7 +4,7 @@ Hosted on Cloudflare R2, this is the most secure database that you have ever see
 ## Usage
 Enter the given code into the text box, then press Enter or click the button to download your corresponding file. 
 
-## v4
+## v4.0
 **Release Notes**
 - Bug fixes and refinements
 - Wallpaper update! Custom wallpapers available to set in admin panel
