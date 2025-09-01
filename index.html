@@ -7,6 +7,24 @@
   <style>
     :root {
       --wallpaper-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --primary-color: #667eea;
+      --primary-dark: #5a6fd8;
+      --secondary-color: #764ba2;
+      --success-color: #27ae60;
+      --error-color: #e74c3c;
+      --warning-color: #f39c12;
+      --text-color: #333;
+      --text-muted: #666;
+      --border-color: #e1e8ed;
+      --border-radius: 12px;
+      --border-radius-sm: 8px;
+      --border-radius-lg: 20px;
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+      --shadow-md: 0 8px 25px rgba(0, 0, 0, 0.15);
+      --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.2);
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --glass-bg: rgba(255, 255, 255, 0.95);
+      --glass-border: rgba(255, 255, 255, 0.3);
     }
 
     * {
@@ -24,18 +42,35 @@
       align-items: center;
       padding: 20px;
       transition: background 0.5s ease;
+      line-height: 1.6;
     }
 
     .container {
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(10px);
-      border-radius: 20px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(15px);
+      border-radius: var(--border-radius-lg);
       padding: 40px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+      box-shadow: var(--shadow-lg);
       text-align: center;
       width: 100%;
-      max-width: 400px;
-      border: 1px solid rgba(255, 255, 255, 0.3);
+      max-width: 420px;
+      border: 1px solid var(--glass-border);
+      position: relative;
+    }
+
+    .container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: var(--border-radius-lg);
+      padding: 1px;
+      background: linear-gradient(135deg, var(--glass-border), transparent);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask-composite: xor;
+      pointer-events: none;
     }
 
     .icon {
@@ -45,7 +80,7 @@
     }
 
     h2 {
-      color: #333;
+      color: var(--text-color);
       margin-bottom: 30px;
       font-size: 24px;
       font-weight: 600;
@@ -58,17 +93,18 @@
 
     #codeInput {
       width: 100%;
-      padding: 15px 20px;
-      border: 2px solid #e1e8ed;
-      border-radius: 12px;
+      padding: 16px 20px;
+      border: 2px solid var(--border-color);
+      border-radius: var(--border-radius);
       font-size: 16px;
-      background: rgba(255, 255, 255, 0.9);
-      transition: all 0.3s ease;
+      background: var(--glass-bg);
+      transition: var(--transition);
       outline: none;
+      font-weight: 500;
     }
 
     #codeInput:focus {
-      border-color: #667eea;
+      border-color: var(--primary-color);
       box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
       transform: translateY(-1px);
     }
@@ -79,22 +115,37 @@
 
     #submitBtn {
       width: 100%;
-      padding: 15px 20px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 16px 20px;
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
       color: white;
       border: none;
-      border-radius: 12px;
+      border-radius: var(--border-radius);
       font-size: 16px;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: var(--transition);
       position: relative;
       overflow: hidden;
     }
 
+    #submitBtn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
     #submitBtn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+      box-shadow: var(--shadow-md);
+    }
+
+    #submitBtn:hover::before {
+      left: 100%;
     }
 
     #submitBtn:active {
@@ -124,11 +175,11 @@
 
     #message {
       margin-top: 20px;
-      padding: 12px;
-      border-radius: 8px;
+      padding: 12px 16px;
+      border-radius: var(--border-radius-sm);
       font-weight: 500;
       min-height: 20px;
-      transition: all 0.3s ease;
+      transition: var(--transition);
       opacity: 0;
       transform: translateY(10px);
     }
@@ -140,13 +191,13 @@
 
     #message.success {
       background: rgba(46, 204, 113, 0.1);
-      color: #27ae60;
+      color: var(--success-color);
       border: 1px solid rgba(46, 204, 113, 0.3);
     }
 
     #message.error {
       background: rgba(231, 76, 60, 0.1);
-      color: #e74c3c;
+      color: var(--error-color);
       border: 1px solid rgba(231, 76, 60, 0.3);
     }
 
@@ -158,50 +209,36 @@
 
     .hint {
       margin-top: 20px;
-      color: #666;
+      color: var(--text-muted);
       font-size: 14px;
       opacity: 0.8;
     }
 
-    @media (max-width: 480px) {
-      .container {
-        padding: 30px 20px;
-        margin: 10px;
-      }
-      
-      h2 {
-        font-size: 20px;
-      }
-    }
-
-    /* Subtle pulse animation for the container */
-    @keyframes pulse {
-      0% { box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2); }
-      50% { box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25); }
-      100% { box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2); }
-    }
-
-    .container {
-      animation: pulse 4s ease-in-out infinite;
-    }
-
-    /* Admin panel styles */
+    /* Admin Panel Styles */
     .admin-icon {
       position: fixed;
-      top: 10px;
-      right: 10px;
-      width: 20px;
-      height: 20px;
-      opacity: 0.01;
+      top: 20px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 50%;
+      opacity: 0.3;
       cursor: pointer;
-      font-size: 16px;
-      color: #666;
-      transition: opacity 0.3s ease;
+      font-size: 18px;
+      color: #fff;
+      transition: var(--transition);
       z-index: 1000;
+      border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
     .admin-icon:hover {
-      opacity: 0.1;
+      opacity: 0.8;
+      transform: scale(1.1);
     }
 
     .admin-modal {
@@ -215,6 +252,7 @@
       z-index: 2000;
       justify-content: center;
       align-items: center;
+      backdrop-filter: blur(5px);
     }
 
     .admin-modal.show {
@@ -222,29 +260,109 @@
     }
 
     .admin-panel {
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(10px);
-      border-radius: 15px;
-      padding: 30px;
-      max-width: 900px;
-      width: 95%;
+      background: var(--glass-bg);
+      backdrop-filter: blur(15px);
+      border-radius: var(--border-radius-lg);
+      padding: 32px;
+      max-width: min(95vw, 1000px);
+      width: 100%;
       max-height: 90vh;
       overflow-y: auto;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--glass-border);
+      position: relative;
+    }
+
+    .admin-panel::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: var(--border-radius-lg);
+      padding: 1px;
+      background: linear-gradient(135deg, var(--glass-border), transparent);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask-composite: xor;
+      pointer-events: none;
     }
 
     .admin-panel h3 {
-      color: #333;
-      margin-bottom: 20px;
+      color: var(--text-color);
+      margin-bottom: 24px;
       text-align: center;
-      font-size: 24px;
+      font-size: 28px;
+      font-weight: 700;
     }
 
+    /* Login Section */
+    #adminLogin {
+      max-width: 400px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    /* Stats Dashboard */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+      color: white;
+      padding: 24px 20px;
+      border-radius: var(--border-radius);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), transparent);
+      pointer-events: none;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .stat-number {
+      font-size: 32px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      opacity: 0.9;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Tab Navigation */
     .admin-tabs {
       display: flex;
       justify-content: center;
-      margin-bottom: 25px;
-      border-bottom: 2px solid #e1e8ed;
+      margin-bottom: 32px;
+      background: rgba(0, 0, 0, 0.05);
+      border-radius: var(--border-radius);
+      padding: 4px;
+      gap: 4px;
       flex-wrap: wrap;
     }
 
@@ -253,20 +371,25 @@
       border: none;
       padding: 12px 20px;
       font-size: 14px;
+      font-weight: 500;
       cursor: pointer;
-      color: #666;
-      border-bottom: 2px solid transparent;
-      transition: all 0.3s ease;
-      margin: 0 10px;
+      color: var(--text-muted);
+      border-radius: var(--border-radius-sm);
+      transition: var(--transition);
+      flex: 1;
+      min-width: 120px;
+      white-space: nowrap;
     }
 
     .admin-tab.active {
-      color: #667eea;
-      border-bottom-color: #667eea;
+      background: white;
+      color: var(--primary-color);
+      box-shadow: var(--shadow-sm);
     }
 
-    .admin-tab:hover {
-      color: #667eea;
+    .admin-tab:hover:not(.active) {
+      background: rgba(255, 255, 255, 0.5);
+      color: var(--text-color);
     }
 
     .admin-content {
@@ -277,307 +400,290 @@
       display: block;
     }
 
-    .admin-input, .admin-select {
-      width: 100%;
-      padding: 12px;
-      border: 2px solid #e1e8ed;
-      border-radius: 8px;
-      font-size: 14px;
-      margin-bottom: 15px;
-      outline: none;
-      transition: border-color 0.3s ease;
-    }
-
-    .admin-input:focus, .admin-select:focus {
-      border-color: #667eea;
-    }
-
-    .admin-btn {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      padding: 10px 20px;
-      font-size: 14px;
-      cursor: pointer;
-      margin-right: 10px;
-      margin-bottom: 10px;
-      transition: all 0.3s ease;
-    }
-
-    .admin-btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-    }
-
-    .admin-btn.cancel {
-      background: #95a5a6;
-    }
-
-    .admin-btn.danger {
-      background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-    }
-
-    .admin-btn.success {
-      background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
-    }
-
-    .codes-list {
-      margin-top: 20px;
-    }
-
-    .code-item {
-      background: rgba(102, 126, 234, 0.1);
-      border-radius: 8px;
-      padding: 15px;
-      margin-bottom: 10px;
-      border-left: 4px solid #667eea;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .code-item .code-info {
-      flex: 1;
-    }
-
-    .code-item .code {
-      font-weight: bold;
-      color: #667eea;
-      font-family: monospace;
-      margin-bottom: 4px;
-      font-size: 16px;
-    }
-
-    .code-item .file {
-      color: #666;
-      font-size: 13px;
-    }
-
-    .code-item .actions {
-      display: flex;
-      gap: 10px;
-    }
-
-    .code-item .actions button {
-      padding: 6px 12px;
-      font-size: 12px;
-      min-width: auto;
-    }
-
-    .files-list {
-      margin-top: 20px;
-    }
-
-    .file-item {
-      background: rgba(52, 152, 219, 0.1);
-      border-radius: 8px;
-      padding: 15px;
-      margin-bottom: 10px;
-      border-left: 4px solid #3498db;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .file-item .file-info {
-      flex: 1;
-    }
-
-    .file-item .file-name {
-      font-weight: bold;
-      color: #3498db;
-      font-family: monospace;
-      margin-bottom: 4px;
-      font-size: 14px;
-    }
-
-    .file-item .file-details {
-      color: #666;
-      font-size: 12px;
-    }
-
-    .file-item .file-status {
-      padding: 4px 8px;
-      border-radius: 12px;
-      font-size: 11px;
-      font-weight: bold;
-      margin-left: 10px;
-    }
-
-    .file-item .file-status.linked {
-      background: #27ae60;
-      color: white;
-    }
-
-    .file-item .file-status.unlinked {
-      background: #f39c12;
-      color: white;
-    }
-
+    /* Form Elements */
     .form-group {
-      margin-bottom: 20px;
+      margin-bottom: 24px;
     }
 
     .form-group label {
       display: block;
       margin-bottom: 8px;
       font-weight: 600;
-      color: #333;
+      color: var(--text-color);
+      font-size: 14px;
     }
 
     .form-row {
-      display: flex;
-      gap: 15px;
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+      gap: 16px;
       align-items: end;
     }
 
-    .form-row .form-group {
-      flex: 1;
-      margin-bottom: 0;
+    .admin-input, .admin-select {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid var(--border-color);
+      border-radius: var(--border-radius-sm);
+      font-size: 14px;
+      outline: none;
+      transition: var(--transition);
+      background: white;
+      font-weight: 500;
     }
 
+    .admin-input:focus, .admin-select:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    /* Buttons */
+    .admin-btn {
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+      color: white;
+      border: none;
+      border-radius: var(--border-radius-sm);
+      padding: 12px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .admin-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .admin-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .admin-btn:hover::before {
+      left: 100%;
+    }
+
+    .admin-btn:active {
+      transform: translateY(0);
+    }
+
+    .admin-btn.cancel {
+      background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+    }
+
+    .admin-btn.danger {
+      background: linear-gradient(135deg, var(--error-color) 0%, #c0392b 100%);
+    }
+
+    .admin-btn.success {
+      background: linear-gradient(135deg, var(--success-color) 0%, #229954 100%);
+    }
+
+    /* Code and File Lists */
+    .codes-list, .files-list {
+      margin-top: 24px;
+    }
+
+    .list-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .list-header h4 {
+      color: var(--text-color);
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .code-item, .file-item {
+      background: white;
+      border-radius: var(--border-radius);
+      padding: 20px;
+      margin-bottom: 12px;
+      border: 1px solid var(--border-color);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      align-items: center;
+      transition: var(--transition);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .code-item:hover, .file-item:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-1px);
+    }
+
+    .code-item {
+      border-left: 4px solid var(--primary-color);
+    }
+
+    .file-item {
+      border-left: 4px solid #3498db;
+    }
+
+    .item-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .item-primary {
+      font-weight: 700;
+      color: var(--text-color);
+      font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+      margin-bottom: 4px;
+      font-size: 16px;
+    }
+
+    .code-item .item-primary {
+      color: var(--primary-color);
+    }
+
+    .file-item .item-primary {
+      color: #3498db;
+    }
+
+    .item-secondary {
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .item-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .item-actions .admin-btn {
+      padding: 8px 16px;
+      font-size: 12px;
+      min-width: 70px;
+    }
+
+    .file-status {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .file-status.linked {
+      background: var(--success-color);
+      color: white;
+    }
+
+    .file-status.unlinked {
+      background: var(--warning-color);
+      color: white;
+    }
+
+    /* Upload Area */
     .upload-area {
-      border: 2px dashed #667eea;
-      border-radius: 8px;
-      padding: 30px;
+      border: 2px dashed var(--primary-color);
+      border-radius: var(--border-radius);
+      padding: 40px 20px;
       text-align: center;
       background: rgba(102, 126, 234, 0.05);
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
     }
 
-    .upload-area:hover {
-      background: rgba(102, 126, 234, 0.1);
-    }
-
-    .upload-area.dragover {
-      background: rgba(102, 126, 234, 0.15);
-      border-color: #5a6fd8;
-    }
-
-    .upload-icon {
-      font-size: 32px;
-      margin-bottom: 10px;
-      color: #667eea;
-    }
-
-    .modal {
-      display: none;
-      position: fixed;
+    .upload-area::before {
+      content: '';
+      position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 3000;
-      justify-content: center;
-      align-items: center;
+      background: rgba(102, 126, 234, 0.05);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+      transform-origin: left;
     }
 
-    .modal.show {
-      display: flex;
+    .upload-area:hover {
+      background: rgba(102, 126, 234, 0.1);
+      border-color: var(--primary-dark);
     }
 
-    .modal-content {
-      background: white;
-      border-radius: 12px;
-      padding: 25px;
-      max-width: 500px;
-      width: 90%;
-      max-height: 80vh;
-      overflow-y: auto;
+    .upload-area:hover::before {
+      transform: scaleX(1);
     }
 
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      padding-bottom: 15px;
-      border-bottom: 1px solid #eee;
+    .upload-area.dragover {
+      background: rgba(102, 126, 234, 0.15);
+      border-color: var(--primary-dark);
+      transform: scale(1.02);
     }
 
-    .modal-header h4 {
-      margin: 0;
-      color: #333;
+    .upload-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      color: var(--primary-color);
     }
 
-    .close-btn {
-      background: none;
-      border: none;
-      font-size: 24px;
-      cursor: pointer;
-      color: #999;
-      padding: 0;
-      width: 30px;
-      height: 30px;
+    .upload-area p {
+      color: var(--text-color);
+      font-weight: 500;
+      font-size: 16px;
     }
 
-    .close-btn:hover {
-      color: #333;
-    }
-
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 15px;
-      margin-bottom: 25px;
-    }
-
-    .stat-card {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      padding: 20px;
-      border-radius: 12px;
-      text-align: center;
-    }
-
-    .stat-number {
-      font-size: 24px;
-      font-weight: bold;
-      margin-bottom: 5px;
-    }
-
-    .stat-label {
-      font-size: 12px;
-      opacity: 0.9;
-    }
-
-    /* NEW: Wallpaper-specific styles */
+    /* Wallpaper Builder */
     .wallpaper-builder {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      padding: 20px;
-      margin-bottom: 20px;
+      background: rgba(255, 255, 255, 0.6);
+      border-radius: var(--border-radius);
+      padding: 24px;
+      margin-bottom: 24px;
+      border: 1px solid var(--border-color);
     }
 
     .wallpaper-tabs {
       display: flex;
-      margin-bottom: 20px;
-      background: rgba(0, 0, 0, 0.1);
-      border-radius: 8px;
+      margin-bottom: 24px;
+      background: rgba(0, 0, 0, 0.05);
+      border-radius: var(--border-radius-sm);
       padding: 4px;
-      flex-wrap: wrap;
+      gap: 2px;
+      overflow-x: auto;
     }
 
     .wallpaper-tab {
       flex: 1;
       background: none;
       border: none;
-      padding: 8px 12px;
+      padding: 10px 14px;
       border-radius: 6px;
       cursor: pointer;
       font-size: 12px;
-      transition: all 0.3s ease;
-      color: #666;
-      margin: 2px;
-      min-width: 80px;
+      font-weight: 600;
+      transition: var(--transition);
+      color: var(--text-muted);
+      white-space: nowrap;
+      min-width: 90px;
     }
 
     .wallpaper-tab.active {
-      background: #667eea;
+      background: var(--primary-color);
       color: white;
+      box-shadow: var(--shadow-sm);
     }
 
     .wallpaper-content {
@@ -588,126 +694,15 @@
       display: block;
     }
 
-    .color-input-group {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 15px;
-    }
-
-    .color-input-group input[type="color"] {
-      width: 50px;
-      height: 35px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    .color-input-group input[type="text"] {
-      flex: 1;
-      padding: 8px 12px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      font-family: monospace;
-      font-size: 12px;
-    }
-
-    .gradient-controls {
-      margin-bottom: 20px;
-    }
-
-    .gradient-direction {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 15px;
-      align-items: center;
-    }
-
-    .gradient-direction select {
-      padding: 8px 12px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      background: white;
-    }
-
-    .gradient-direction input[type="number"] {
-      width: 80px;
-      padding: 8px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-    }
-
-    .color-stops {
-      margin-bottom: 15px;
-    }
-
-    .color-stop {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 10px;
-      padding: 10px;
-      background: rgba(255, 255, 255, 0.5);
-      border-radius: 8px;
-    }
-
-    .color-stop input[type="color"] {
-      width: 40px;
-      height: 30px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    .color-stop input[type="text"] {
-      width: 100px;
-      padding: 6px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      font-family: monospace;
-      font-size: 11px;
-    }
-
-    .color-stop input[type="range"] {
-      flex: 1;
-    }
-
-    .color-stop .position-value {
-      width: 50px;
-      text-align: center;
-      font-size: 12px;
-      color: #666;
-    }
-
-    .remove-stop {
-      background: #e74c3c;
-      color: white;
-      border: none;
-      width: 25px;
-      height: 25px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 12px;
-    }
-
-    .add-stop {
-      background: #27ae60;
-      color: white;
-      border: none;
-      padding: 8px 15px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 12px;
-    }
-
     .wallpaper-preview {
       width: 100%;
-      height: 100px;
-      border-radius: 8px;
-      margin-bottom: 15px;
-      border: 2px solid rgba(255, 255, 255, 0.3);
+      height: 120px;
+      border-radius: var(--border-radius-sm);
+      margin-bottom: 20px;
+      border: 2px solid var(--border-color);
       position: relative;
       overflow: hidden;
+      box-shadow: var(--shadow-sm);
     }
 
     .wallpaper-preview::after {
@@ -716,120 +711,677 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      color: rgba(255, 255, 255, 0.8);
-      font-weight: bold;
-      text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-      font-size: 14px;
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 700;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+      font-size: 16px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
     }
 
+    /* Color Controls */
+    .color-input-group {
+      display: grid;
+      grid-template-columns: 60px 1fr;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .color-input-group input[type="color"] {
+      width: 50px;
+      height: 40px;
+      border: none;
+      border-radius: var(--border-radius-sm);
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .color-input-group input[type="text"] {
+      padding: 10px 12px;
+      border: 2px solid var(--border-color);
+      border-radius: var(--border-radius-sm);
+      font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+      font-size: 13px;
+      font-weight: 600;
+      transition: var(--transition);
+    }
+
+    .color-input-group input[type="text"]:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    /* Gradient Controls */
+    .gradient-controls {
+      margin-bottom: 24px;
+    }
+
+    .gradient-direction {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      margin-bottom: 16px;
+      align-items: center;
+    }
+
+    .gradient-direction select {
+      padding: 10px 12px;
+      border: 2px solid var(--border-color);
+      border-radius: var(--border-radius-sm);
+      background: white;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .gradient-direction select:focus {
+      border-color: var(--primary-color);
+      outline: none;
+    }
+
+    .gradient-direction input[type="number"] {
+      width: 100px;
+      padding: 10px 12px;
+      border: 2px solid var(--border-color);
+      border-radius: var(--border-radius-sm);
+      text-align: center;
+      font-weight: 600;
+    }
+
+    /* Color Stops */
+    .color-stops {
+      margin-bottom: 16px;
+      max-height: 300px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .color-stop {
+      display: grid;
+      grid-template-columns: 50px 100px 1fr 60px 40px;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 12px;
+      padding: 16px;
+      background: white;
+      border-radius: var(--border-radius-sm);
+      border: 1px solid var(--border-color);
+      transition: var(--transition);
+    }
+
+    .color-stop:hover {
+      box-shadow: var(--shadow-sm);
+    }
+
+    .color-stop input[type="color"] {
+      width: 40px;
+      height: 35px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .color-stop input[type="text"] {
+      padding: 8px 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .color-stop input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      height: 6px;
+      background: var(--border-color);
+      border-radius: 3px;
+      outline: none;
+    }
+
+    .color-stop input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      background: var(--primary-color);
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .color-stop input[type="range"]::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      background: var(--primary-color);
+      border-radius: 50%;
+      cursor: pointer;
+      border: none;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .position-value {
+      text-align: center;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      min-width: 40px;
+    }
+
+    .remove-stop {
+      background: var(--error-color);
+      color: white;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+    }
+
+    .remove-stop:hover {
+      background: #c0392b;
+      transform: scale(1.1);
+    }
+
+    .add-stop {
+      background: var(--success-color);
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: var(--border-radius-sm);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: var(--transition);
+    }
+
+    .add-stop:hover {
+      background: #229954;
+      transform: translateY(-1px);
+    }
+
+    /* Presets Grid */
     .presets-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-      gap: 15px;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 16px;
       margin-top: 20px;
     }
 
     .preset-item {
       cursor: pointer;
-      border-radius: 8px;
+      border-radius: var(--border-radius-sm);
       overflow: hidden;
-      transition: transform 0.3s ease;
-      border: 2px solid transparent;
+      transition: var(--transition);
+      border: 2px solid var(--border-color);
+      background: white;
     }
 
     .preset-item:hover {
       transform: translateY(-2px);
-      border-color: #667eea;
+      box-shadow: var(--shadow-md);
     }
 
     .preset-item.selected {
-      border-color: #667eea;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
     }
 
     .preset-thumbnail {
       width: 100%;
-      height: 60px;
-      border-radius: 6px 6px 0 0;
+      height: 80px;
+      border-radius: var(--border-radius-sm) var(--border-radius-sm) 0 0;
     }
 
     .preset-name {
-      padding: 8px;
-      background: rgba(255, 255, 255, 0.9);
+      padding: 12px 10px;
+      background: white;
       text-align: center;
-      font-size: 11px;
-      font-weight: bold;
-      color: #333;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-color);
     }
 
-    .custom-css-area {
-      margin-bottom: 20px;
-    }
-
+    /* Custom CSS Area */
     .custom-css-area textarea {
       width: 100%;
-      height: 80px;
-      padding: 12px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      font-family: monospace;
-      font-size: 12px;
+      height: 100px;
+      padding: 16px;
+      border: 2px solid var(--border-color);
+      border-radius: var(--border-radius-sm);
+      font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+      font-size: 13px;
       resize: vertical;
+      transition: var(--transition);
     }
 
+    .custom-css-area textarea:focus {
+      border-color: var(--primary-color);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 3000;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(5px);
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: var(--border-radius);
+      padding: 32px;
+      max-width: 500px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border-color);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    .modal-header h4 {
+      margin: 0;
+      color: var(--text-color);
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 28px;
+      cursor: pointer;
+      color: var(--text-muted);
+      padding: 0;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: var(--transition);
+    }
+
+    .close-btn:hover {
+      background: rgba(0, 0, 0, 0.1);
+      color: var(--text-color);
+    }
+
+    /* Action Buttons */
+    .action-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+
+    /* Upload Progress */
+    #uploadProgress {
+      margin-top: 24px;
+    }
+
+    #uploadProgress p {
+      padding: 12px 16px;
+      border-radius: var(--border-radius-sm);
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    #uploadProgress p[style*="green"] {
+      background: rgba(46, 204, 113, 0.1);
+      color: var(--success-color);
+      border: 1px solid rgba(46, 204, 113, 0.3);
+    }
+
+    #uploadProgress p[style*="red"] {
+      background: rgba(231, 76, 60, 0.1);
+      color: var(--error-color);
+      border: 1px solid rgba(231, 76, 60, 0.3);
+    }
+
+    /* Responsive Design */
     @media (max-width: 768px) {
+      .container {
+        padding: 30px 24px;
+        max-width: 100%;
+      }
+
       .admin-panel {
-        padding: 20px;
+        padding: 24px 20px;
         max-width: 100%;
         max-height: 95vh;
       }
 
-      .form-row {
-        flex-direction: column;
+      .admin-panel h3 {
+        font-size: 24px;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 16px;
+      }
+
+      .stat-card {
+        padding: 20px 16px;
+      }
+
+      .stat-number {
+        font-size: 28px;
       }
 
       .admin-tabs {
-        flex-wrap: wrap;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .admin-tab {
+        margin: 0;
+        min-width: unset;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+        gap: 16px;
       }
 
       .code-item, .file-item {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
+        grid-template-columns: 1fr;
+        gap: 16px;
+        text-align: left;
       }
 
-      .code-item .actions, .file-item .actions {
-        width: 100%;
+      .item-actions {
         justify-content: flex-start;
       }
 
       .wallpaper-tabs {
         flex-direction: column;
+        gap: 4px;
       }
 
       .wallpaper-tab {
-        margin: 2px 0;
+        margin: 0;
+        min-width: unset;
+      }
+
+      .color-stop {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        text-align: center;
+      }
+
+      .gradient-direction {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .presets-grid {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 12px;
+      }
+
+      .modal-content {
+        padding: 24px 20px;
+        margin: 20px;
+      }
+
+      .admin-icon {
+        top: 16px;
+        right: 16px;
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 24px 20px;
+        margin: 10px;
+      }
+      
+      h2 {
+        font-size: 20px;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      .stat-card {
+        padding: 16px 12px;
+      }
+
+      .stat-number {
+        font-size: 24px;
+      }
+
+      .stat-label {
+        font-size: 11px;
       }
 
       .presets-grid {
         grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-        gap: 10px;
+      }
+
+      .preset-thumbnail {
+        height: 60px;
+      }
+
+      .color-input-group {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .wallpaper-preview {
+        height: 100px;
+      }
+    }
+
+    /* Animations and Transitions */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .admin-content.active {
+      animation: fadeIn 0.5s ease;
+    }
+
+    .code-item, .file-item {
+      animation: slideIn 0.3s ease;
+    }
+
+    .code-item:nth-child(odd), .file-item:nth-child(odd) {
+      animation-delay: 0.1s;
+    }
+
+    .code-item:nth-child(even), .file-item:nth-child(even) {
+      animation-delay: 0.2s;
+    }
+
+    /* Pulse animation for the container */
+    @keyframes pulse {
+      0% { box-shadow: var(--shadow-lg); }
+      50% { box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25); }
+      100% { box-shadow: var(--shadow-lg); }
+    }
+
+    .container {
+      animation: pulse 4s ease-in-out infinite;
+    }
+
+    /* Scrollbar Styling */
+    .admin-panel::-webkit-scrollbar,
+    .color-stops::-webkit-scrollbar,
+    .custom-css-area textarea::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .admin-panel::-webkit-scrollbar-track,
+    .color-stops::-webkit-scrollbar-track,
+    .custom-css-area textarea::-webkit-scrollbar-track {
+      background: var(--border-color);
+      border-radius: 4px;
+    }
+
+    .admin-panel::-webkit-scrollbar-thumb,
+    .color-stops::-webkit-scrollbar-thumb,
+    .custom-css-area textarea::-webkit-scrollbar-thumb {
+      background: var(--text-muted);
+      border-radius: 4px;
+    }
+
+    .admin-panel::-webkit-scrollbar-thumb:hover,
+    .color-stops::-webkit-scrollbar-thumb:hover,
+    .custom-css-area textarea::-webkit-scrollbar-thumb:hover {
+      background: var(--text-color);
+    }
+
+    /* Loading States */
+    .loading-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255, 255, 255, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--border-radius);
+      z-index: 10;
+    }
+
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid var(--border-color);
+      border-top: 4px solid var(--primary-color);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    /* Focus States */
+    .admin-btn:focus,
+    .admin-input:focus,
+    .admin-select:focus,
+    input[type="color"]:focus,
+    textarea:focus {
+      outline: 2px solid var(--primary-color);
+      outline-offset: 2px;
+    }
+
+    /* High Contrast Mode Support */
+    @media (prefers-contrast: high) {
+      :root {
+        --border-color: #000;
+        --text-muted: #333;
+        --glass-bg: rgba(255, 255, 255, 1);
+      }
+
+      .container,
+      .admin-panel {
+        backdrop-filter: none;
+      }
+    }
+
+    /* Reduced Motion Support */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+
+      .container {
+        animation: none;
+      }
+    }
+
+    /* Print Styles */
+    @media print {
+      .admin-icon,
+      .admin-modal,
+      .modal {
+        display: none !important;
+      }
+
+      .container {
+        box-shadow: none;
+        background: white;
       }
     }
   </style>
 </head>
 <body>
   <!-- Admin icon in corner -->
-  <div class="admin-icon" id="adminIcon" title="Admin">⚙️</div>
+  <div class="admin-icon" id="adminIcon" title="Admin Panel">⚙️</div>
   
   <!-- Admin modal -->
   <div class="admin-modal" id="adminModal">
     <div class="admin-panel">
       <h3>Admin Panel</h3>
       <div id="adminLogin">
-        <input type="password" class="admin-input" id="adminPassword" placeholder="Enter admin password">
-        <button class="admin-btn" onclick="checkAdminPassword()">Login</button>
-        <button class="admin-btn cancel" onclick="closeAdminModal()">Cancel</button>
+        <div class="form-group">
+          <input type="password" class="admin-input" id="adminPassword" placeholder="Enter admin password">
+        </div>
+        <div class="action-buttons">
+          <button class="admin-btn" onclick="checkAdminPassword()">Login</button>
+          <button class="admin-btn cancel" onclick="closeAdminModal()">Cancel</button>
+        </div>
       </div>
       <div id="adminContent" style="display: none;">
         <!-- Stats Dashboard -->
@@ -873,13 +1425,17 @@
             </div>
           </div>
           
-          <h4>Existing Codes:</h4>
+          <div class="list-header">
+            <h4>Existing Codes</h4>
+          </div>
           <div class="codes-list" id="codesList"></div>
         </div>
 
         <!-- Files Tab -->
         <div id="filesTab" class="admin-content">
-          <button class="admin-btn" onclick="refreshFiles()">🔄 Refresh Files</button>
+          <div class="action-buttons" style="justify-content: flex-start; margin-bottom: 20px;">
+            <button class="admin-btn" onclick="refreshFiles()">🔄 Refresh Files</button>
+          </div>
           <div class="files-list" id="filesList"></div>
         </div>
 
@@ -890,10 +1446,10 @@
             <p>Drag & drop files here or click to browse</p>
             <input type="file" id="fileInput" style="display: none;" multiple>
           </div>
-          <div id="uploadProgress" style="margin-top: 20px;"></div>
+          <div id="uploadProgress"></div>
         </div>
 
-        <!-- NEW: Wallpaper Tab -->
+        <!-- Wallpaper Tab -->
         <div id="wallpaperTab" class="admin-content">
           <div class="wallpaper-builder">
             <!-- Wallpaper Type Tabs -->
@@ -940,9 +1496,7 @@
                 
                 <div class="form-group">
                   <label>Color Stops:</label>
-                  <div class="color-stops" id="linearColorStops">
-                    <!-- Dynamic color stops will be added here -->
-                  </div>
+                  <div class="color-stops" id="linearColorStops"></div>
                   <button class="add-stop" onclick="addLinearColorStop()">+ Add Color Stop</button>
                 </div>
               </div>
@@ -961,9 +1515,7 @@
                 
                 <div class="form-group">
                   <label>Color Stops:</label>
-                  <div class="color-stops" id="radialColorStops">
-                    <!-- Dynamic color stops will be added here -->
-                  </div>
+                  <div class="color-stops" id="radialColorStops"></div>
                   <button class="add-stop" onclick="addRadialColorStop()">+ Add Color Stop</button>
                 </div>
               </div>
@@ -971,9 +1523,7 @@
 
             <!-- Presets Content -->
             <div id="presetsContent" class="wallpaper-content">
-              <div class="presets-grid" id="presetsGrid">
-                <!-- Dynamic presets will be loaded here -->
-              </div>
+              <div class="presets-grid" id="presetsGrid"></div>
             </div>
 
             <!-- Custom CSS Content -->
@@ -985,14 +1535,16 @@
             </div>
 
             <!-- Apply Button -->
-            <div style="text-align: center; margin-top: 20px;">
+            <div class="action-buttons">
               <button class="admin-btn success" onclick="applyWallpaper()">Apply Wallpaper</button>
               <button class="admin-btn" onclick="previewWallpaper()">Preview Only</button>
             </div>
           </div>
         </div>
 
-        <button class="admin-btn cancel" onclick="closeAdminModal()" style="margin-top: 30px;">Close Admin Panel</button>
+        <div class="action-buttons" style="margin-top: 32px; border-top: 2px solid var(--border-color); padding-top: 24px;">
+          <button class="admin-btn cancel" onclick="closeAdminModal()">Close Admin Panel</button>
+        </div>
       </div>
     </div>
   </div>
@@ -1014,8 +1566,10 @@
           <option value="">Select file...</option>
         </select>
       </div>
-      <button class="admin-btn success" onclick="updateCode()">Update Code</button>
-      <button class="admin-btn cancel" onclick="closeEditModal()">Cancel</button>
+      <div class="action-buttons">
+        <button class="admin-btn success" onclick="updateCode()">Update Code</button>
+        <button class="admin-btn cancel" onclick="closeEditModal()">Cancel</button>
+      </div>
     </div>
   </div>
 
@@ -1034,7 +1588,7 @@
   </div>
   
   <script>
-    // Enhanced code with wallpaper functionality
+    // Enhanced code with wallpaper functionality and improved UI
     class CodeUnlocker {
       constructor() {
         this.API_BASE = 'https://code-unlock-api.thanos.workers.dev';
@@ -1069,7 +1623,7 @@
         codeInput.focus();
       }
 
-      // NEW: Wallpaper functions
+      // Wallpaper functions
       async loadCurrentWallpaper() {
         try {
           const response = await fetch(`${this.API_BASE}/api/wallpaper/current`);
@@ -1164,7 +1718,7 @@
         stopDiv.className = 'color-stop';
         stopDiv.innerHTML = `
           <input type="color" value="${color}" onchange="window.codeUnlockerInstance.updateWallpaperPreview()">
-          <input type="text" value="${color}" placeholder="#667eea" onchange="window.codeUnlockerInstance.syncColorInputs(this)" style="width: 80px;">
+          <input type="text" value="${color}" placeholder="#667eea" onchange="window.codeUnlockerInstance.syncColorInputs(this)">
           <input type="range" min="0" max="100" value="${position}" oninput="window.codeUnlockerInstance.updateColorStopPosition(this)">
           <span class="position-value">${position}%</span>
           <button class="remove-stop" onclick="window.codeUnlockerInstance.removeColorStop(this, 'linear')">&times;</button>
@@ -1179,7 +1733,7 @@
         stopDiv.className = 'color-stop';
         stopDiv.innerHTML = `
           <input type="color" value="${color}" onchange="window.codeUnlockerInstance.updateWallpaperPreview()">
-          <input type="text" value="${color}" placeholder="#667eea" onchange="window.codeUnlockerInstance.syncColorInputs(this)" style="width: 80px;">
+          <input type="text" value="${color}" placeholder="#667eea" onchange="window.codeUnlockerInstance.syncColorInputs(this)">
           <input type="range" min="0" max="100" value="${position}" oninput="window.codeUnlockerInstance.updateColorStopPosition(this)">
           <span class="position-value">${position}%</span>
           <button class="remove-stop" onclick="window.codeUnlockerInstance.removeColorStop(this, 'radial')">&times;</button>
@@ -1190,7 +1744,7 @@
 
       removeColorStop(button, type) {
         const container = document.getElementById(type + 'ColorStops');
-        if (container.children.length > 2) { // Keep at least 2 stops
+        if (container.children.length > 2) {
           button.parentElement.remove();
           this.updateWallpaperPreview();
         }
@@ -1334,7 +1888,7 @@
           case 'presets':
             const selectedPreset = document.querySelector('.preset-item.selected');
             if (!selectedPreset) {
-              alert('Please select a preset first');
+              this.showToast('Please select a preset first', 'warning');
               return;
             }
             const presetKey = Object.keys(this.wallpaperPresets)[Array.from(selectedPreset.parentNode.children).indexOf(selectedPreset)];
@@ -1354,11 +1908,12 @@
         }
 
         if (!css) {
-          alert('Please configure a wallpaper first');
+          this.showToast('Please configure a wallpaper first', 'warning');
           return;
         }
 
         this.applyWallpaperToPage(css);
+        this.showToast('Wallpaper preview applied!', 'success');
       }
 
       async applyWallpaper() {
@@ -1394,7 +1949,7 @@
           case 'presets':
             const selectedPreset = document.querySelector('.preset-item.selected');
             if (!selectedPreset) {
-              alert('Please select a preset first');
+              this.showToast('Please select a preset first', 'error');
               return;
             }
             const presetKey = Object.keys(this.wallpaperPresets)[Array.from(selectedPreset.parentNode.children).indexOf(selectedPreset)];
@@ -1414,7 +1969,7 @@
         }
 
         if (!css) {
-          alert('Please configure a wallpaper first');
+          this.showToast('Please configure a wallpaper first', 'error');
           return;
         }
 
@@ -1442,13 +1997,13 @@
           if (result.success) {
             this.applyWallpaperToPage(css);
             this.currentWallpaperConfig = wallpaperConfig;
-            alert('Wallpaper applied successfully!');
+            this.showToast('Wallpaper applied successfully!', 'success');
           } else {
-            alert(result.error || 'Failed to apply wallpaper');
+            this.showToast(result.error || 'Failed to apply wallpaper', 'error');
           }
         } catch (error) {
           console.error('Error applying wallpaper:', error);
-          alert('Error applying wallpaper');
+          this.showToast('Error applying wallpaper', 'error');
         }
       }
 
@@ -1487,7 +2042,54 @@
         document.documentElement.style.setProperty('--wallpaper-bg', css);
       }
 
-      // Existing functions...
+      // Toast notification system
+      showToast(message, type = 'info') {
+        // Remove existing toasts
+        const existingToast = document.querySelector('.toast');
+        if (existingToast) {
+          existingToast.remove();
+        }
+
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+        toast.innerHTML = message;
+        
+        toast.style.cssText = `
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          padding: 16px 20px;
+          background: ${type === 'success' ? 'var(--success-color)' : type === 'error' ? 'var(--error-color)' : type === 'warning' ? 'var(--warning-color)' : '#3498db'};
+          color: white;
+          border-radius: var(--border-radius-sm);
+          font-weight: 600;
+          font-size: 14px;
+          z-index: 9999;
+          box-shadow: var(--shadow-md);
+          transform: translateX(100%);
+          transition: var(--transition);
+          max-width: 300px;
+        `;
+
+        document.body.appendChild(toast);
+
+        // Animate in
+        setTimeout(() => {
+          toast.style.transform = 'translateX(0)';
+        }, 10);
+
+        // Auto remove
+        setTimeout(() => {
+          toast.style.transform = 'translateX(100%)';
+          setTimeout(() => {
+            if (toast.parentNode) {
+              toast.remove();
+            }
+          }, 300);
+        }, 3000);
+      }
+
+      // Main unlock functionality
       async checkCode() {
         const input = document.getElementById("codeInput").value.trim();
         const submitBtn = document.getElementById("submitBtn");
@@ -1651,15 +2253,20 @@
         const codesList = document.getElementById("codesList");
         codesList.innerHTML = "";
         
+        if (Object.keys(codes).length === 0) {
+          codesList.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--text-muted);">No access codes configured yet.</div>';
+          return;
+        }
+
         Object.entries(codes).forEach(([code, file]) => {
           const codeItem = document.createElement("div");
           codeItem.className = "code-item";
           codeItem.innerHTML = `
-            <div class="code-info">
-              <div class="code">${code}</div>
-              <div class="file">${file}</div>
+            <div class="item-info">
+              <div class="item-primary">${code}</div>
+              <div class="item-secondary">${file}</div>
             </div>
-            <div class="actions">
+            <div class="item-actions">
               <button class="admin-btn" onclick="window.codeUnlockerInstance.editCode('${code}', '${file}')">Edit</button>
               <button class="admin-btn danger" onclick="window.codeUnlockerInstance.deleteCode('${code}')">Delete</button>
             </div>
@@ -1672,21 +2279,28 @@
         const filesList = document.getElementById("filesList");
         filesList.innerHTML = "";
         
+        if (files.length === 0) {
+          filesList.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--text-muted);">No files uploaded yet.</div>';
+          return;
+        }
+
         files.forEach(file => {
           const fileItem = document.createElement("div");
           fileItem.className = "file-item";
           fileItem.innerHTML = `
-            <div class="file-info">
-              <div class="file-name">${file.name}</div>
-              <div class="file-details">
+            <div class="item-info">
+              <div class="item-primary">${file.name}</div>
+              <div class="item-secondary">
                 Size: ${this.formatFileSize(file.size)} | 
                 Modified: ${new Date(file.lastModified).toLocaleDateString()}
               </div>
             </div>
-            <div class="file-status ${file.hasCode ? 'linked' : 'unlinked'}">
-              ${file.hasCode ? 'Linked' : 'Unlinked'}
+            <div class="item-actions">
+              <div class="file-status ${file.hasCode ? 'linked' : 'unlinked'}">
+                ${file.hasCode ? 'Linked' : 'Unlinked'}
+              </div>
+              ${!file.hasCode ? `<button class="admin-btn danger" onclick="window.codeUnlockerInstance.deleteFile('${file.name}')">Delete</button>` : ''}
             </div>
-            ${!file.hasCode ? `<button class="admin-btn danger" onclick="window.codeUnlockerInstance.deleteFile('${file.name}')">Delete</button>` : ''}
           `;
           filesList.appendChild(fileItem);
         });
@@ -1716,7 +2330,7 @@
         const fileName = document.getElementById("newCodeFile").value;
 
         if (!code || !fileName) {
-          alert("Please enter both code and select a file");
+          this.showToast("Please enter both code and select a file", "warning");
           return;
         }
 
@@ -1739,13 +2353,13 @@
             document.getElementById("newCode").value = "";
             document.getElementById("newCodeFile").value = "";
             this.loadAdminData();
-            alert("Code added successfully!");
+            this.showToast("Code added successfully!", "success");
           } else {
-            alert(result.error || "Failed to add code");
+            this.showToast(result.error || "Failed to add code", "error");
           }
         } catch (error) {
           console.error('Error adding code:', error);
-          alert("Error adding code");
+          this.showToast("Error adding code", "error");
         }
       }
 
@@ -1761,7 +2375,7 @@
         const newFile = document.getElementById("editCodeFile").value;
 
         if (!newCode || !newFile) {
-          alert("Please enter both code and select a file");
+          this.showToast("Please enter both code and select a file", "warning");
           return;
         }
 
@@ -1784,13 +2398,13 @@
           if (result.success) {
             this.closeEditModal();
             this.loadAdminData();
-            alert("Code updated successfully!");
+            this.showToast("Code updated successfully!", "success");
           } else {
-            alert(result.error || "Failed to update code");
+            this.showToast(result.error || "Failed to update code", "error");
           }
         } catch (error) {
           console.error('Error updating code:', error);
-          alert("Error updating code");
+          this.showToast("Error updating code", "error");
         }
       }
 
@@ -1815,13 +2429,13 @@
 
           if (result.success) {
             this.loadAdminData();
-            alert("Code deleted successfully!");
+            this.showToast("Code deleted successfully!", "success");
           } else {
-            alert(result.error || "Failed to delete code");
+            this.showToast(result.error || "Failed to delete code", "error");
           }
         } catch (error) {
           console.error('Error deleting code:', error);
-          alert("Error deleting code");
+          this.showToast("Error deleting code", "error");
         }
       }
 
@@ -1846,13 +2460,13 @@
 
           if (result.success) {
             this.loadAdminData();
-            alert("File deleted successfully!");
+            this.showToast("File deleted successfully!", "success");
           } else {
-            alert(result.error || "Failed to delete file");
+            this.showToast(result.error || "Failed to delete file", "error");
           }
         } catch (error) {
           console.error('Error deleting file:', error);
-          alert("Error deleting file");
+          this.showToast("Error deleting file", "error");
         }
       }
 
@@ -1928,13 +2542,18 @@
       }
 
       updateStats() {
-        // This will be called after loading codes and files
         const codesCount = document.getElementById("codesList").children.length;
         const filesCount = document.getElementById("filesList").children.length;
         const linkedCount = document.querySelectorAll(".file-status.linked").length;
 
-        document.getElementById("totalCodes").textContent = codesCount;
-        document.getElementById("totalFiles").textContent = filesCount;
+        // Count actual items, not placeholder messages
+        const actualCodesCount = document.getElementById("codesList").querySelector('.code-item') ? 
+          document.querySelectorAll('.code-item').length : 0;
+        const actualFilesCount = document.getElementById("filesList").querySelector('.file-item') ? 
+          document.querySelectorAll('.file-item').length : 0;
+
+        document.getElementById("totalCodes").textContent = actualCodesCount;
+        document.getElementById("totalFiles").textContent = actualFilesCount;
         document.getElementById("linkedFiles").textContent = linkedCount;
       }
 
@@ -1972,6 +2591,11 @@
     async function checkAdminPassword() {
       const password = document.getElementById("adminPassword").value;
       
+      if (!password) {
+        window.codeUnlockerInstance.showToast("Please enter a password", "warning");
+        return;
+      }
+      
       try {
         const response = await fetch(`${window.codeUnlockerInstance.API_BASE}/api/admin/codes`, {
           method: 'POST',
@@ -1991,14 +2615,15 @@
           
           // Load admin data
           await window.codeUnlockerInstance.loadAdminData();
+          window.codeUnlockerInstance.showToast("Welcome to Admin Panel!", "success");
         } else {
-          alert("Incorrect password!");
+          window.codeUnlockerInstance.showToast("Incorrect password!", "error");
           document.getElementById("adminPassword").value = "";
           document.getElementById("adminPassword").focus();
         }
       } catch (error) {
         console.error('Admin API error:', error);
-        alert("Connection error. Please try again!");
+        window.codeUnlockerInstance.showToast("Connection error. Please try again!", "error");
       }
     }
 
@@ -2023,7 +2648,7 @@
       }
     }
 
-    // NEW: Wallpaper tab functions
+    // Wallpaper tab functions
     function switchWallpaperTab(tabName) {
       // Hide all wallpaper content
       document.querySelectorAll('.wallpaper-content').forEach(content => {
