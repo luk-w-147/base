@@ -4,6 +4,8 @@ Hosted on Cloudflare R2, this is the most secure database that you have ever see
 ## Usage
 Enter the given code into the text box, then press Enter or click the button to download your corresponding file. 
 
+**This project has been archived.**
+
 ## v5.0
 **Release Notes**
 - Bug fixes and refinements
