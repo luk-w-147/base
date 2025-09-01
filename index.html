@@ -2225,7 +2225,6 @@
 
           if (result.success) {
             this.displayFiles(result.files);
-            this.lastFilesList = result.files; 
           }
         } catch (error) {
           console.error('Error loading files:', error);
@@ -2277,7 +2276,6 @@
       }
 
       displayFiles(files) {
-        console.log("Rendering files count:", files.length);
         const filesList = document.getElementById("filesList");
         filesList.innerHTML = "";
         
@@ -2555,7 +2553,7 @@
           document.querySelectorAll('.file-item').length : 0;
 
         document.getElementById("totalCodes").textContent = actualCodesCount;
-        document.getElementById("totalFiles").textContent = this.lastFilesList ? this.lastFilesList.length : 0;
+        document.getElementById("totalFiles").textContent = actualFilesCount;
         document.getElementById("linkedFiles").textContent = linkedCount;
       }
 
