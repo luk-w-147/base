@@ -2225,6 +2225,7 @@
 
           if (result.success) {
             this.displayFiles(result.files);
+            this.lastFilesList = result.files; 
           }
         } catch (error) {
           console.error('Error loading files:', error);
