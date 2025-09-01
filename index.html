@@ -2554,7 +2554,7 @@
           document.querySelectorAll('.file-item').length : 0;
 
         document.getElementById("totalCodes").textContent = actualCodesCount;
-        document.getElementById("totalFiles").textContent = actualFilesCount;
+        document.getElementById("totalFiles").textContent = this.lastFilesList ? this.lastFilesList.length : 0;
         document.getElementById("linkedFiles").textContent = linkedCount;
       }
 
